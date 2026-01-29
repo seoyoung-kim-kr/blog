@@ -1,7 +1,10 @@
+import Profile from "@/src/components/Profile";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black"></div>
+    <section className="bg-gray-50 py-20">
+      <Profile />
+    </section>
   );
 }
