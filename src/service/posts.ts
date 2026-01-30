@@ -15,3 +15,9 @@ export async function getPosts(): Promise<Post[]> {
   const data = await fs.readFile(filePath, "utf-8");
   return JSON.parse(data);
 }
+
+export async function getFeaturedPosts(): Promise<Post[]> {
+  const posts = await getPosts();
+  const featuredPosts = posts.filter((post) => post.featured);
+  return featuredPosts;
+}
