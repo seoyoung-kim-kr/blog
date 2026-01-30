@@ -1,8 +1,9 @@
 import Container from "@/src/components/Container";
+import MarkDownProvider from "@/src/components/MarkDownProvider";
 import { getPost } from "@/src/service/posts";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import ReactMarkdown from "react-markdown";
+
 import { FaRegCalendarAlt } from "react-icons/fa";
 
 type Props = {
@@ -46,7 +47,7 @@ export default async function DetailPostPage({ params }: Props) {
           </div>
           <div className="bg-gray-200 w-full h-1" />
           {/* Content */}
-          <ReactMarkdown>{post.content}</ReactMarkdown>
+          <MarkDownProvider>{post.content}</MarkDownProvider>
         </section>
       </div>
     </Container>
