@@ -17,7 +17,10 @@ export type PostWithContent = Post & {
 export async function getPosts(): Promise<Post[]> {
   const filePath = path.join(process.cwd(), "data", "posts.json");
   const data = await fs.readFile(filePath, "utf-8");
-  return JSON.parse(data);
+  const sortedPosts = [...JSON.parse(data)].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
+  return sortedPosts;
 }
 
 export async function getFeaturedPosts(): Promise<Post[]> {
@@ -57,16 +60,13 @@ export async function getAdjacentPosts({
   slug: string;
 }): Promise<{ prevPost: Post | null; nextPost: Post | null } | undefined> {
   const posts = await getPosts();
-  const sortedPosts = [...posts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
 
-  const currentIndex = sortedPosts.findIndex((post) => post.path === slug);
+  const currentIndex = posts.findIndex((post) => post.path === slug);
 
   if (currentIndex === -1) return undefined;
 
-  const prevPost = sortedPosts[currentIndex + 1] ?? null;
-  const nextPost = sortedPosts[currentIndex - 1] ?? null;
+  const prevPost = posts[currentIndex + 1] ?? null;
+  const nextPost = posts[currentIndex - 1] ?? null;
 
   return {
     prevPost,
