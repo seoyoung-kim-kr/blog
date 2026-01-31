@@ -23,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter} ${poppins} ${playfair}`}>
       <body className={inter.className}>
-        <Header />
+        <header className="sticky top-0 bg-white">
+          <Header />
+        </header>
         <main>{children}</main>
       </body>
     </html>

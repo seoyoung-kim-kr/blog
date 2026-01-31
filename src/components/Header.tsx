@@ -42,13 +42,11 @@ function MenuBar() {
 
 export default function Header() {
   return (
-    <Container>
-      <header className="flex justify-between">
-        <Link href="/">
-          <h1>Seoyoung's Blog</h1>
-        </Link>
-        <MenuBar />
-      </header>
+    <Container className="flex justify-between">
+      <Link href="/">
+        <h1>Seoyoung's Blog</h1>
+      </Link>
+      <MenuBar />
     </Container>
   );
 }
