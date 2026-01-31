@@ -17,7 +17,7 @@ export default function Profile() {
         <p>Frontend Developer</p>
         <Link
           href="contact"
-          className="bg-pink-100 py-1 px-4 rounded-md text-gray hover:bg-pink-50 transition-colors duration-300"
+          className="bg-pink-50 py-1 px-4 rounded-md text-gray hover:bg-pink-50 transition-colors duration-300 font-semibold text-gray-500"
         >
           Contact Me
         </Link>
