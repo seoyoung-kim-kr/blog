@@ -1,6 +1,7 @@
+import AdjacentPostNav from "@/src/components/AdjacentPostNav";
 import Container from "@/src/components/Container";
 import MarkDownProvider from "@/src/components/MarkDownProvider";
-import { getPost } from "@/src/service/posts";
+import { getAdjacentPosts, getPost, getPosts } from "@/src/service/posts";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
@@ -14,7 +15,12 @@ type Props = {
 
 export default async function DetailPostPage({ params }: Props) {
   const { slug } = await params;
+
   const post = await getPost({ slug });
+  const { prevPost, nextPost } = (await getAdjacentPosts({ slug })) ?? {
+    prevPost: null,
+    nextPost: null,
+  };
 
   if (!post) {
     notFound();
@@ -49,7 +55,16 @@ export default async function DetailPostPage({ params }: Props) {
           {/* Content */}
           <MarkDownProvider>{post.content}</MarkDownProvider>
         </section>
+
+        <AdjacentPostNav nextPost={nextPost} prevPost={prevPost} />
       </div>
     </Container>
   );
+}
+
+export async function generateMetadata() {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    slug: post.path,
+  }));
 }

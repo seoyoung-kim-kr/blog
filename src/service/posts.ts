@@ -50,3 +50,26 @@ export async function getPost({
     content,
   };
 }
+
+export async function getAdjacentPosts({
+  slug,
+}: {
+  slug: string;
+}): Promise<{ prevPost: Post | null; nextPost: Post | null } | undefined> {
+  const posts = await getPosts();
+  const sortedPosts = [...posts].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
+
+  const currentIndex = sortedPosts.findIndex((post) => post.path === slug);
+
+  if (currentIndex === -1) return undefined;
+
+  const prevPost = sortedPosts[currentIndex + 1] ?? null;
+  const nextPost = sortedPosts[currentIndex - 1] ?? null;
+
+  return {
+    prevPost,
+    nextPost,
+  };
+}
