@@ -6,11 +6,11 @@ import Link from "next/link";
 export default function PostCard({ post }: { post: Post }) {
   return (
     <Link href={`/posts/${post.path}`}>
-      <div className="shadow-md w-75 h-80 rounded-b-md">
+      <div className="shadow-md w-70 h-80 rounded-b-md">
         <Image
           src={`/images/posts/${post.path}.png`}
           alt="Profile"
-          width={300}
+          width={280}
           height={200}
         />
         <div className="px-4 py-3 grid gap-y-2 h-40">

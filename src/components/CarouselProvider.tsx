@@ -5,20 +5,25 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
 const responsive = {
+  superLargeDesktop: {
+    breakpoint: { max: 3000, min: 1600 },
+    items: 5,
+  },
   desktop: {
-    breakpoint: { max: 3000, min: 1024 },
+    breakpoint: { max: 1600, min: 1200 },
     items: 3,
-    slidesToSlide: 3, // optional, default to 1.
+  },
+  smallDesktop: {
+    breakpoint: { max: 1200, min: 1024 },
+    items: 3,
   },
   tablet: {
     breakpoint: { max: 1024, min: 464 },
     items: 2,
-    slidesToSlide: 2, // optional, default to 1.
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
     items: 1,
-    slidesToSlide: 1, // optional, default to 1.
   },
 };
 
@@ -35,9 +40,11 @@ export default function CarouselProvider({ children, className }: Props) {
       arrows
       showDots
       containerClass="w-full pb-2"
-      itemClass="h-full flex justify-center px-2"
-      sliderClass="flex gap-4"
+      itemClass="h-full flex justify-center !w-auto"
+      autoPlay
+      autoPlaySpeed={3000}
       className={className}
+      sliderClass="gap-x-4"
     >
       {children}
     </Carousel>
