@@ -14,39 +14,43 @@ const MENU_LIST: Menu[] = [
   },
   {
     label: "About",
-    href: "about",
+    href: "/about",
   },
   {
     label: "Posts",
-    href: "posts",
+    href: "/posts",
   },
   {
     label: "Contact",
-    href: "contact",
+    href: "/contact",
   },
 ];
 
 function MenuBar() {
   return (
-    <ul className="flex gap-x-2">
-      {MENU_LIST.map((menu, idx) => (
-        <li key={idx}>
-          <Link href={menu.href} className="text-sm hover:underline">
-            {menu.label}
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <nav>
+      <ul className="flex gap-x-2">
+        {MENU_LIST.map((menu, idx) => (
+          <li key={idx}>
+            <Link href={menu.href} className="text-sm hover:underline">
+              {menu.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }
 
 export default function Header() {
   return (
-    <Container className="flex justify-between">
-      <Link href="/">
-        <h1>Seoyoung's Blog</h1>
-      </Link>
-      <MenuBar />
-    </Container>
+    <header className="sticky top-0 bg-white z-50">
+      <Container className="flex justify-between">
+        <Link href="/">
+          <h1>Seoyoung's Blog</h1>
+        </Link>
+        <MenuBar />
+      </Container>
+    </header>
   );
 }
