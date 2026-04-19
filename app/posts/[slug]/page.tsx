@@ -1,11 +1,8 @@
-import AdjacentPostNav from "@/src/components/AdjacentPostNav";
+import AdjacentPostCard from "@/src/components/AdjacentPostCard";
 import Container from "@/src/components/Container";
-import MarkDownProvider from "@/src/components/MarkDownProvider";
-import { getAdjacentPosts, getPost, getPosts } from "@/src/service/posts";
+import PostContent from "@/src/components/PostContent";
+import { getPostData, getAllPosts } from "@/src/service/posts";
 import Image from "next/image";
-import { notFound } from "next/navigation";
-
-import { FaRegCalendarAlt } from "react-icons/fa";
 
 type Props = {
   params: Promise<{
@@ -13,57 +10,33 @@ type Props = {
   }>;
 };
 
-export default async function DetailPostPage({ params }: Props) {
+export default async function PostPage({ params }: Props) {
   const { slug } = await params;
-
-  const post = await getPost({ slug });
-  const { prevPost, nextPost } = (await getAdjacentPosts({ slug })) ?? {
-    prevPost: null,
-    nextPost: null,
-  };
-
-  if (!post) {
-    notFound();
-  }
+  const post = await getPostData(slug);
+  const { path, title, next, prev } = post;
 
   return (
     <Container>
-      <div className="bg-gray-50 space-y-4">
-        <div className="w-full relative h-64 overflow-hidden rounded-t-2xl">
-          <Image
-            src={`/images/posts/${slug}.png`}
-            alt="post-image"
-            fill
-            sizes="100vw"
-            style={{ objectFit: "cover" }}
-          />
-        </div>
-
-        <section className="px-4.5 py-3 space-y-4">
-          {/* Title, Date, Description */}
-          <div>
-            <div className="flex justify-between items-start space-y-1">
-              <h1 className="text-xl">{post.title}</h1>
-              <div className="text-sm flex gap-x-2 items-center">
-                <FaRegCalendarAlt />
-                {post.date}
-              </div>
-            </div>
-            <p>{post.description}</p>
-          </div>
-          <div className="bg-gray-200 w-full h-1" />
-          {/* Content */}
-          <MarkDownProvider>{post.content}</MarkDownProvider>
+      <article className="rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
+        <Image
+          className="w-full h-1/5 max-h-125"
+          src={`/images/posts/${path}.png`}
+          alt={title}
+          width={760}
+          height={420}
+        />
+        <PostContent post={post} />
+        <section className="flex shadow-md">
+          {prev && <AdjacentPostCard post={prev} type="prev" />}
+          {next && <AdjacentPostCard post={next} type="next" />}
         </section>
-
-        <AdjacentPostNav nextPost={nextPost} prevPost={prevPost} />
-      </div>
+      </article>
     </Container>
   );
 }
 
 export async function generateMetadata() {
-  const posts = await getPosts();
+  const posts = await getAllPosts();
   return posts.map((post) => ({
     slug: post.path,
   }));
