@@ -8,7 +8,7 @@ export default async function FeaturedPosts() {
 
   return (
     <section>
-      <h1>Featured Posts</h1>
+      <h2>Featured Posts</h2>
       <PostsGrid posts={featuredPosts} />
     </section>
   );
