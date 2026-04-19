@@ -3,14 +3,14 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import { PostData } from "../service/posts";
 import MarkdownViewer from "./MarkdownViewer";
 
-const PostContent = ({ post }: { post: PostData }) => {
+function PostContent({ post }: { post: PostData }) {
   const { title, date, description, content } = post;
   return (
     <section className="px-4.5 py-3 space-y-4">
       {/* Post Header */}
       <header className="space-y-1">
         <div className="flex justify-between items-start gap-4">
-          <h1 className="text-xl font-bold">{title}</h1>
+          <h2 className="text-xl font-bold">{title}</h2>
           <time
             dateTime={date}
             className="text-sm flex gap-x-2 items-center whitespace-nowrap shrink-0"
@@ -28,6 +28,6 @@ const PostContent = ({ post }: { post: PostData }) => {
       <MarkdownViewer content={content} />
     </section>
   );
-};
+}
 
 export default PostContent;

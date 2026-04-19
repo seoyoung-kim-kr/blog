@@ -1,5 +1,5 @@
 import path from "path";
-import { promises as fs } from "fs";
+import { readFile } from "fs/promises";
 
 export type Post = {
   title: string;
@@ -10,66 +10,44 @@ export type Post = {
   featured: boolean;
 };
 
-export type PostWithContent = Post & {
+export type PostData = Post & {
   content: string;
+  next: Post | null;
+  prev: Post | null;
 };
 
-export async function getPosts(): Promise<Post[]> {
+export async function getAllPosts(): Promise<Post[]> {
   const filePath = path.join(process.cwd(), "data", "posts.json");
-  const data = await fs.readFile(filePath, "utf-8");
-  const sortedPosts = [...JSON.parse(data)].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
-  return sortedPosts;
+  return readFile(filePath, "utf-8")
+    .then<Post[]>(JSON.parse)
+    .then((posts) => posts.sort((a, b) => (a.date > b.date ? -1 : 1)));
 }
 
 export async function getFeaturedPosts(): Promise<Post[]> {
-  const posts = await getPosts();
-  const featuredPosts = posts.filter((post) => post.featured);
-  return featuredPosts;
+  return getAllPosts().then((posts) => posts.filter((post) => post.featured));
 }
 
-export async function getNonFeaturedPosts(): Promise<Post[]> {
-  const posts = await getPosts();
-  const featuredPosts = posts.filter((post) => !post.featured);
-  return featuredPosts;
+export async function getCarouselPosts(): Promise<Post[]> {
+  return getAllPosts().then((posts) => posts.filter((post) => !post.featured));
 }
 
-export async function getPost({
-  slug,
-}: {
-  slug: string;
-}): Promise<PostWithContent | undefined> {
-  const posts = await getPosts();
-  const foundPost = posts.find((post) => post.path === slug);
+export async function getPostData(fileName: string): Promise<PostData> {
+  const filePath = path.join(process.cwd(), "data/posts", `${fileName}.md`);
+  const posts = await getAllPosts();
+  const post = posts.find((post) => post.path === fileName);
 
-  if (!foundPost) return undefined;
+  if (!post) throw `${fileName} not found`;
 
-  const filePath = path.join(process.cwd(), "data/posts", `${slug}.md`);
-  const content = await fs.readFile(filePath, "utf-8");
+  const content = await readFile(filePath, "utf-8");
+
+  const currentIndex = posts.findIndex((post) => post.path === fileName);
+  const prev = posts[currentIndex + 1] ?? null;
+  const next = posts[currentIndex - 1] ?? null;
 
   return {
-    ...foundPost,
+    ...post,
     content,
-  };
-}
-
-export async function getAdjacentPosts({
-  slug,
-}: {
-  slug: string;
-}): Promise<{ prevPost: Post | null; nextPost: Post | null } | undefined> {
-  const posts = await getPosts();
-
-  const currentIndex = posts.findIndex((post) => post.path === slug);
-
-  if (currentIndex === -1) return undefined;
-
-  const prevPost = posts[currentIndex + 1] ?? null;
-  const nextPost = posts[currentIndex - 1] ?? null;
-
-  return {
-    prevPost,
-    nextPost,
+    next,
+    prev,
   };
 }

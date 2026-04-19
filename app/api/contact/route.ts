@@ -20,7 +20,7 @@ export async function POST(req: Request) {
       subject,
       text,
       html: `
-    		<h1>${subject}</h1>
+    		<h2>${subject}</h2>
     		<div>${text}</div>
     		</br>
     		<p>보낸사람 : ${from}</p>

@@ -1,18 +1,15 @@
 import Container from "@/src/components/Container";
-import Profile from "@/src/components/Profile";
+import Hero from "@/src/components/Hero";
 import React from "react";
 
 export default function AboutPage() {
   return (
     <>
-      <section className="bg-gray-50 py-20">
-        <Profile />
-      </section>
-
+      <Hero />
       <Container>
         <section className="space-y-10">
           <div>
-            <h1>Who am I?</h1>
+            <h2>Who am I?</h2>
             <p className="text-sm">
               프론트엔드 개발자 김서영입니다.
               <br />
@@ -23,11 +20,11 @@ export default function AboutPage() {
             </p>
           </div>
           <div>
-            <h1>Carrer</h1>
+            <h2>Carrer</h2>
             <p className="text-sm">(주)썬더소프트코리아(2023.01.01 ~ 현재)</p>
           </div>
           <div>
-            <h1>Skills</h1>
+            <h2>Skills</h2>
             <p className="text-sm">
               <span className="font-semibold">Frontend</span> : React, Tailwind
               CSS, NextJS, Tanstack Query/Table,Axios, Zustand
