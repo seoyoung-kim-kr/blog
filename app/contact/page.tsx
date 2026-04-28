@@ -4,6 +4,12 @@ import { PiNotionLogo } from "react-icons/pi";
 import { FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
 import ContactForm from "@/src/components/ContactForm";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Seoyoung에게 메일 발송",
+};
 
 const socialLinks: { href: string; label: string; Icon: IconType }[] = [
   {
