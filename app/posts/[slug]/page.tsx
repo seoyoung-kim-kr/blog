@@ -35,9 +35,9 @@ export default async function PostPage({ params }: Props) {
   );
 }
 
-export async function generateMetadata() {
-  const posts = await getAllPosts();
-  return posts.map((post) => ({
-    slug: post.path,
-  }));
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const { title, description } = await getPostData(slug);
+
+  return { title, description };
 }

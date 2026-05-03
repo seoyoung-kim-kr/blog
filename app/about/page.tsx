@@ -1,6 +1,11 @@
 import Container from "@/src/components/Container";
 import Hero from "@/src/components/Hero";
-import React from "react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About",
+  description: "Seoyoung의 소개 페이지입니다.",
+};
 
 export default function AboutPage() {
   return (
