@@ -41,3 +41,8 @@ export async function generateMetadata({ params }: Props) {
 
   return { title, description };
 }
+
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+  return posts.map((post) => ({ slug: post.path }));
+}
