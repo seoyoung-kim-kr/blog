@@ -70,7 +70,3 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.path }));
 }
 
-export async function generateStaticParams() {
-  const posts = await getAllPosts();
-  return posts.map((post) => ({ slug: post.path }));
-}
