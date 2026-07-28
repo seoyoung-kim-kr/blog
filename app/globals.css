@@ -1,25 +1,76 @@
 @import "tailwindcss";
 
-:root {
-  --font-inter: var(--font-inter);
-  --font-poppins: var(--font-poppins);
-  --font-playfair: var(--font-playfair);
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #ffffff;
+    color: #2D3A2C;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .dark body {
+    background-color: #121712;
+    color: #FEF5ED;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    letter-spacing: -0.025em;
+  }
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-playfair);
-  font-weight: 700;
+/* Glassmorphism & Cozy Matcha Strawberry utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(173, 194, 169, 0.35);
 }
 
-.font-poppins {
-  font-family: var(--font-poppins);
+.dark .glass-panel {
+  background: rgba(18, 23, 18, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(173, 194, 169, 0.2);
 }
 
-.font-playfair {
-  font-family: var(--font-playfair);
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(173, 194, 169, 0.3);
+}
+
+.dark .glass-card {
+  background: rgba(26, 33, 26, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(173, 194, 169, 0.2);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(173, 194, 169, 0.6);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(173, 194, 169, 0.9);
 }
