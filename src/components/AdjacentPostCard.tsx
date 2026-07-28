@@ -1,36 +1,46 @@
 import { Post } from "../service/posts";
-import Image from "next/image";
 import Link from "next/link";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 
 type Props = {
   post: Post;
   type: "next" | "prev";
 };
-const ICON_CLASS =
-  "text-5xl m-4 text-pink-200 transition-all group-hover:text-6xl";
 
 export default function AdjacentPostCard({
   post: { path, title, description },
   type,
 }: Props) {
+  const isPrev = type === "prev";
+
   return (
-    <Link href={`/posts/${path}`} className="relative w-full bg-black max-h-56">
-      <Image
-        className="w-full opacity-40"
-        src={`/images/posts/${path}.png`}
-        alt={title}
-        width={150}
-        height={100}
-      />
-      <div className="group absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex justify-around items-center text-white px-8">
-        {type === "prev" && <FaArrowLeft className={ICON_CLASS} />}
-        <div className="w-full text-center">
-          <h3 className="text-3xl font-bold">{title}</h3>
-          <p className="font-bold">{description}</p>
+    <Link
+      href={`/posts/${path}`}
+      className="group flex-1 flex items-center gap-4 p-5 sm:p-6 rounded-2xl bg-white/80 dark:bg-[#1E271D]/80 border border-[#ADC2A9]/40 dark:border-[#ADC2A9]/20 backdrop-blur-md hover:bg-white dark:hover:bg-[#1E271D] shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+    >
+      {isPrev && (
+        <div className="w-10 h-10 rounded-full bg-[#ADC2A9]/30 dark:bg-[#ADC2A9]/20 flex items-center justify-center text-[#2D3A2C] dark:text-[#FEF5ED] shrink-0 group-hover:-translate-x-1 transition-transform">
+          <FiArrowLeft className="w-5 h-5" />
         </div>
-        {type === "next" && <FaArrowRight className={ICON_CLASS} />}
+      )}
+
+      <div className={`flex-1 min-w-0 ${isPrev ? "text-left" : "text-right"}`}>
+        <span className="text-xs font-bold text-[#4B6346] dark:text-[#ADC2A9] uppercase tracking-wider block mb-1">
+          {isPrev ? "← Previous Post" : "Next Post →"}
+        </span>
+        <h3 className="text-sm sm:text-base font-bold text-[#2D3A2C] dark:text-[#FEF5ED] truncate group-hover:text-[#4B6346] dark:group-hover:text-[#ADC2A9] transition-colors">
+          {title}
+        </h3>
+        <p className="text-xs text-[#2D3A2C]/60 dark:text-[#FEF5ED]/60 truncate mt-0.5">
+          {description}
+        </p>
       </div>
+
+      {!isPrev && (
+        <div className="w-10 h-10 rounded-full bg-[#ADC2A9]/30 dark:bg-[#ADC2A9]/20 flex items-center justify-center text-[#2D3A2C] dark:text-[#FEF5ED] shrink-0 group-hover:translate-x-1 transition-transform">
+          <FiArrowRight className="w-5 h-5" />
+        </div>
+      )}
     </Link>
   );
 }

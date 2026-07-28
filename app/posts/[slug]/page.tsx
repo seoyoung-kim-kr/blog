@@ -3,6 +3,7 @@ import Container from "@/src/components/Container";
 import PostContent from "@/src/components/PostContent";
 import { getPostData, getAllPosts } from "@/src/service/posts";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{
@@ -12,23 +13,42 @@ type Props = {
 
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
-  const post = await getPostData(slug);
-  const { path, title, next, prev } = post;
+  
+  let post;
+  try {
+    post = await getPostData(slug);
+  } catch (e) {
+    return notFound();
+  }
+
+  if (!post) return notFound();
+
+  const { path, title, next, prev, image } = post;
+  const bannerSrc = image || `/images/posts/${path}.png`;
 
   return (
-    <Container>
-      <article className="rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
-        <Image
-          className="w-full h-1/5 max-h-125"
-          src={`/images/posts/${path}.png`}
-          alt={title}
-          width={760}
-          height={420}
-        />
+    <Container className="py-8 sm:py-12">
+      <article className="max-w-4xl mx-auto rounded-3xl overflow-hidden bg-white/80 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800/60 backdrop-blur-xl shadow-xl">
+        {/* Banner Cover Image */}
+        <div className="relative w-full aspect-[21/9] bg-slate-100 dark:bg-slate-800">
+          <Image
+            className="object-cover"
+            src={bannerSrc}
+            alt={title}
+            fill
+            priority
+          />
+        </div>
+
+        {/* Post Main Body */}
         <PostContent post={post} />
-        <section className="flex shadow-md">
-          {prev && <AdjacentPostCard post={prev} type="prev" />}
-          {next && <AdjacentPostCard post={next} type="next" />}
+
+        {/* Adjacent Navigation */}
+        <section className="p-6 sm:p-10 pt-0 border-t border-slate-200/60 dark:border-slate-800/60 mt-8">
+          <div className="flex flex-col sm:flex-row gap-4 pt-6">
+            {prev && <AdjacentPostCard post={prev} type="prev" />}
+            {next && <AdjacentPostCard post={next} type="next" />}
+          </div>
         </section>
       </article>
     </Container>
@@ -37,9 +57,12 @@ export default async function PostPage({ params }: Props) {
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const { title, description } = await getPostData(slug);
-
-  return { title, description };
+  try {
+    const { title, description } = await getPostData(slug);
+    return { title, description };
+  } catch (e) {
+    return { title: "Post Not Found" };
+  }
 }
 
 export async function generateStaticParams() {
