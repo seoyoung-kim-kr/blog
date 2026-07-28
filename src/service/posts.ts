@@ -44,13 +44,6 @@ export const getAllPosts = cache(async (): Promise<Post[]> => {
   return getLocalPosts();
 });
 
-export const getAllPosts = cache(async (): Promise<Post[]> => {
-  const sanityPosts = await sanityFetch<Post[]>(ALL_PROJECTS_QUERY);
-  if (sanityPosts && sanityPosts.length > 0) {
-    return sanityPosts;
-  }
-  return getLocalPosts();
-});
 
 export async function getFeaturedPosts(): Promise<Post[]> {
   const sanityPosts = await sanityFetch<Post[]>(FEATURED_PROJECTS_QUERY);
