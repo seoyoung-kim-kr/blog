@@ -3,6 +3,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { toast, Toaster } from "sonner";
 import { sendContactEmail } from "../service/contact";
+import { FiSend } from "react-icons/fi";
 
 const DEFAULT_DATA = {
   from: "",
@@ -17,7 +18,7 @@ export default function ContactForm() {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -25,9 +26,10 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     sendContactEmail(form)
       .then(() => {
-        toast.success("메일이 전송되었습니다.");
+        toast.success("메일이 성공적으로 전송되었습니다.");
         setForm(DEFAULT_DATA);
       })
       .catch((err) => {
@@ -45,57 +47,66 @@ export default function ContactForm() {
   return (
     <>
       <Toaster richColors position="top-right" />
-      <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-xl">
+      <form onSubmit={handleSubmit} className="space-y-5 w-full">
         {/* Email */}
-        <div className="flex flex-col gap-1">
-          <label htmlFor="from" className="text-sm font-medium">
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="from" className="text-xs font-bold uppercase tracking-wider text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80">
             Your Email
           </label>
           <input
             type="email"
+            id="from"
             name="from"
             value={form.from}
             onChange={handleChange}
-            className="border rounded px-3 py-1 text-sm w-full"
+            placeholder="name@example.com"
+            className="w-full rounded-2xl bg-white/80 dark:bg-[#171E16]/80 border border-[#ADC2A9]/50 px-4 py-3 text-sm text-[#2D3A2C] dark:text-[#FEF5ED] placeholder:text-[#2D3A2C]/40 focus:outline-none focus:ring-2 focus:ring-[#ADC2A9] transition-all shadow-sm"
             required
             autoFocus
           />
         </div>
 
         {/* Subject */}
-        <div className="flex flex-col gap-1">
-          <label htmlFor="subject" className="text-sm font-medium">
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="subject" className="text-xs font-bold uppercase tracking-wider text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80">
             Subject
           </label>
           <input
             type="text"
+            id="subject"
             name="subject"
             value={form.subject}
             onChange={handleChange}
-            className="border rounded px-3 py-1 text-sm"
+            placeholder="제목을 입력하세요"
+            className="w-full rounded-2xl bg-white/80 dark:bg-[#171E16]/80 border border-[#ADC2A9]/50 px-4 py-3 text-sm text-[#2D3A2C] dark:text-[#FEF5ED] placeholder:text-[#2D3A2C]/40 focus:outline-none focus:ring-2 focus:ring-[#ADC2A9] transition-all shadow-sm"
+            required
           />
         </div>
 
         {/* Message */}
-        <div className="flex flex-col gap-1">
-          <label htmlFor="message" className="text-sm font-medium">
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="message" className="text-xs font-bold uppercase tracking-wider text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80">
             Message
           </label>
           <textarea
+            id="message"
             name="message"
             value={form.message}
             onChange={handleChange}
-            rows={10}
-            className="border rounded px-3 py-2 text-sm resize-none"
+            rows={6}
+            placeholder="내용을 입력하세요..."
+            className="w-full rounded-2xl bg-white/80 dark:bg-[#171E16]/80 border border-[#ADC2A9]/50 p-4 text-sm text-[#2D3A2C] dark:text-[#FEF5ED] placeholder:text-[#2D3A2C]/40 focus:outline-none focus:ring-2 focus:ring-[#ADC2A9] transition-all resize-none shadow-sm"
+            required
           />
         </div>
 
         <button
           type="submit"
-          className="disabled:opacity-80 disabled:cursor-not-allowed px-4 py-2 rounded bg-black text-white text-sm hover:bg-gray-800 transition cursor-pointer"
           disabled={loading}
+          className="w-full py-3.5 px-6 rounded-full bg-[#ADC2A9] hover:bg-[#9BB397] text-[#2D3A2C] text-sm font-extrabold shadow-md hover:shadow-lg transition-all duration-200 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 border border-[#ADC2A9]/60"
         >
-          Submit
+          <FiSend className="w-4 h-4" />
+          <span>{loading ? "Sending..." : "Send Message"}</span>
         </button>
       </form>
     </>
