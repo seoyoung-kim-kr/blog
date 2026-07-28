@@ -34,7 +34,7 @@ async function getLocalPosts(): Promise<Post[]> {
   return readFile(filePath, "utf-8")
     .then<Post[]>(JSON.parse)
     .then((posts) => posts.sort((a, b) => (a.date > b.date ? -1 : 1)));
-}
+});
 
 export const getAllPosts = cache(async (): Promise<Post[]> => {
   const sanityPosts = await sanityFetch<Post[]>(ALL_PROJECTS_QUERY);
