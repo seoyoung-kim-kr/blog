@@ -1,40 +1,99 @@
 "use client";
+
 import { useState } from "react";
 import { Post } from "../service/posts";
 import PostsGrid from "./PostsGrid";
 import Categories from "./Categories";
 import Container from "./Container";
+import { useAdmin } from "../context/AdminContext";
+import ProjectFormModal from "./ProjectFormModal";
+import { FiPlus } from "react-icons/fi";
+import { useRouter } from "next/navigation";
 
 type Props = {
   posts: Post[];
   categories: string[];
 };
 
-const ALL_POSTS = "All Posts";
+const ALL_POSTS = "All Projects";
 
 export default function FilterablePosts({ posts, categories }: Props) {
   const [selected, setSelected] = useState(ALL_POSTS);
+  const { isAdmin } = useAdmin();
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const router = useRouter();
 
   const filtered =
     selected === ALL_POSTS
       ? posts
       : posts.filter((post) => post.category === selected);
 
-  if (!posts) {
-    <div>No Data</div>;
-  }
   return (
-    <>
-      <div className="justify-center rounded-md sticky top-20 left-30 w-full">
-        <Categories
-          categories={[ALL_POSTS, ...categories]}
-          selected={selected}
-          onClick={setSelected}
-        />
+    <Container className="space-y-8">
+      {/* Title Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#ADC2A9]/30 pb-6">
+        <div className="space-y-1 text-center md:text-left">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#2D3A2C] dark:text-[#FEF5ED]">
+            All Projects Showcase
+          </h1>
+          <p className="text-[#2D3A2C]/70 dark:text-[#FEF5ED]/70 text-sm sm:text-base">
+            기술 스택 및 도메인 카테고리별로 작성된 프로젝트 포트폴리오를 확인해보세요.
+          </p>
+        </div>
+
+        {/* Admin Create Button */}
+        {isAdmin && (
+          <button
+            onClick={() => setIsCreateOpen(true)}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#ADC2A9] hover:bg-[#9BB397] text-[#2D3A2C] text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all active:scale-95 border border-[#ADC2A9]/60 shrink-0 self-center md:self-auto"
+          >
+            <FiPlus className="w-4 h-4" />
+            <span>New Project</span>
+          </button>
+        )}
       </div>
-      <Container>
-        <PostsGrid posts={filtered} />
-      </Container>
-    </>
+
+      {/* Main Content Layout: Grid on Left, Categories Sidebar on Right */}
+      <div className="flex flex-col md:flex-row gap-8 items-start">
+        {/* Posts Grid (Left Side) */}
+        <div className="flex-1 w-full min-w-0">
+          {filtered.length === 0 ? (
+            <div className="py-16 text-center text-[#2D3A2C]/60 dark:text-[#FEF5ED]/60 font-medium">
+              해당 카테고리의 프로젝트가 존재하지 않습니다.
+            </div>
+          ) : (
+            <PostsGrid posts={filtered} />
+          )}
+        </div>
+
+        {/* Categories Sidebar (Right Side - Sticky on Desktop) */}
+        <aside className="w-full md:w-56 lg:w-64 shrink-0 md:sticky md:top-24">
+          <div className="p-5 rounded-3xl bg-white/90 dark:bg-[#1E271D]/90 border border-[#ADC2A9]/40 dark:border-[#ADC2A9]/20 backdrop-blur-md shadow-sm space-y-4">
+            <div className="flex items-center justify-between px-1">
+              <h2 className="text-xs font-extrabold text-[#4B6346] dark:text-[#ADC2A9] uppercase tracking-wider">
+                Domains & Tech
+              </h2>
+              <span className="text-[11px] font-semibold text-[#2D3A2C]/60 dark:text-[#FEF5ED]/60">
+                {filtered.length} items
+              </span>
+            </div>
+            <Categories
+              categories={[ALL_POSTS, ...categories]}
+              selected={selected}
+              onClick={setSelected}
+            />
+          </div>
+        </aside>
+      </div>
+
+      {/* Create Project Modal */}
+      {isCreateOpen && (
+        <ProjectFormModal
+          isOpen={isCreateOpen}
+          onClose={() => setIsCreateOpen(false)}
+          onSuccess={() => router.refresh()}
+        />
+      )}
+    </Container>
   );
 }

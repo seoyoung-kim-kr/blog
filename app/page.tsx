@@ -1,15 +1,19 @@
 import Container from "@/src/components/Container";
 import Hero from "@/src/components/Hero";
 import FeaturedPosts from "@/src/components/FeaturedPosts";
-import CarouselPosts from "@/src/components/CarouselPosts";
+import TechStackSection from "@/src/components/TechStackSection";
+import ExperienceSummary from "@/src/components/ExperienceSummary";
+import ContactCTA from "@/src/components/ContactCTA";
 
 export default async function HomePage() {
   return (
     <>
       <Hero />
-      <Container className="space-y-7">
+      <Container className="space-y-12 pb-16">
         <FeaturedPosts />
-        <CarouselPosts />
+        <TechStackSection />
+        <ExperienceSummary />
+        <ContactCTA />
       </Container>
     </>
   );

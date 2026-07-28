@@ -1,74 +1,96 @@
 [
   {
-    "title": "2021년 리뷰",
-    "description": "2021년 한해 동안 배운 기술들, 생각들 정리",
+    "title": "2021년 리뷰 및 회고",
+    "description": "2021년 한해 동안 배운 프론트엔드 기술과 성장에 대한 회고",
     "date": "2021-12-31",
     "category": "my-story",
     "path": "review-2021",
-    "featured": false
+    "featured": false,
+    "skills": ["Retrospective", "Career"],
+    "githubUrl": "https://github.com/seoyoung-kim-kr"
   },
   {
-    "title": "자바스크립트 기초 문법",
-    "description": "기본 문법부터 사용하는 실전까지 최종정리",
+    "title": "자바스크립트 코어 라이브러리",
+    "description": "기본 문법부터 유틸리티 모듈 실전 개발까지 총정리",
     "date": "2022-05-08",
     "category": "javascript",
     "path": "javascript-basic",
-    "featured": false
+    "featured": false,
+    "skills": ["JavaScript", "ES6+", "DOM"],
+    "githubUrl": "https://github.com/seoyoung-kim-kr"
   },
   {
-    "title": "자바스크립트 10가지 프로팁!",
-    "description": "프로처럼 자바스크립트 사용할 수 있는 10가지 팁",
+    "title": "JS 성능 최적화 10가지 프로팁",
+    "description": "실무에서 바로 적용하는 자바스크립트 렌더링 및 알고리즘 10가지 팁",
     "date": "2022-06-15",
     "category": "javascript",
     "path": "javascript-10-tips",
-    "featured": true
+    "featured": true,
+    "skills": ["JavaScript", "Performance", "Optimization"],
+    "githubUrl": "https://github.com/seoyoung-kim-kr",
+    "demoUrl": "https://github.com/seoyoung-kim-kr"
   },
   {
-    "title": "Node 기초 정리",
-    "description": "기본 적인 Node 사용법에 대해 전부 정리!",
+    "title": "Node.js 백엔드 서버 프로젝트",
+    "description": "Express 및 RESTful API 서버 설계 기본 가이드",
     "date": "2022-08-21",
     "category": "backend",
     "path": "node-basic",
-    "featured": false
+    "featured": false,
+    "skills": ["Node.js", "Express", "REST API"],
+    "githubUrl": "https://github.com/seoyoung-kim-kr"
   },
   {
-    "title": "2022년 리뷰",
-    "description": "2022년 한해 동안 배운 기술들, 생각들 정리",
+    "title": "2022년 프론트엔드 회고록",
+    "description": "웹 애플리케이션 아키텍처 도전 과정과 학습 기록",
     "date": "2022-12-31",
     "category": "my-story",
     "path": "review-2022",
-    "featured": false
+    "featured": false,
+    "skills": ["Career", "Frontend", "Story"],
+    "githubUrl": "https://github.com/seoyoung-kim-kr"
   },
   {
-    "title": "Node 프로 팁!",
-    "description": "노드를 프로처럼 사용하기 위한 모든 팁들을 정리!",
+    "title": "Node.js 대용량 데이터 처리 서버",
+    "description": "비동기 스트림과 프로토콜을 활용한 노드 서버 구축 팁",
     "date": "2023-04-10",
     "category": "backend",
     "path": "node-pro-tips",
-    "featured": true
+    "featured": true,
+    "skills": ["Node.js", "Async", "Stream"],
+    "githubUrl": "https://github.com/seoyoung-kim-kr",
+    "demoUrl": "https://github.com/seoyoung-kim-kr"
   },
   {
-    "title": "리액트 Best Practice!",
-    "description": "리액트를 정확하게 사용하는 방법들을 정리",
+    "title": "리액트 디자인 패턴 & Best Practice",
+    "description": "확장 가능한 컴포넌트 아키텍처 및 커스텀 훅 패턴 구현",
     "date": "2023-04-15",
     "category": "frontend",
     "path": "best-react-practices",
-    "featured": true
+    "featured": true,
+    "skills": ["React", "TypeScript", "Design Patterns"],
+    "githubUrl": "https://github.com/seoyoung-kim-kr",
+    "demoUrl": "https://github.com/seoyoung-kim-kr"
   },
   {
-    "title": "리액트 18버전!",
-    "description": "리액트 18에 추가된 사항들 정리",
+    "title": "React 18 동시성 모드 마이그레이션",
+    "description": "useTransition과 Suspense를 활용한 UX 반응성 개선 프로젝트",
     "date": "2023-05-02",
     "category": "frontend",
     "path": "react18-walkthrough",
-    "featured": true
+    "featured": true,
+    "skills": ["React 18", "Suspense", "UX"],
+    "githubUrl": "https://github.com/seoyoung-kim-kr",
+    "demoUrl": "https://github.com/seoyoung-kim-kr"
   },
   {
-    "title": "2023년 리뷰",
-    "description": "2023년 한해 동안 배운 기술들, 생각들 정리",
+    "title": "2023년 기술 성장 및 프로그래밍 결산",
+    "description": "프로덕트 개발 경험 및 프론트엔드 역량 강화 회고",
     "date": "2023-12-31",
     "category": "my-story",
     "path": "review-2023",
-    "featured": true
+    "featured": true,
+    "skills": ["Retrospective", "React", "Next.js"],
+    "githubUrl": "https://github.com/seoyoung-kim-kr"
   }
 ]
