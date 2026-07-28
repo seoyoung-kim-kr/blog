@@ -1,0 +1,144 @@
+import { SANITY_CONFIG, getSanityMutateUrl, getSanityApiUrl } from "./sanityConfig";
+
+export type CreatePostInput = {
+  title: string;
+  slug?: string;
+  description: string;
+  date?: string;
+  category: string;
+  featured?: boolean;
+  skills?: string[];
+  demoUrl?: string;
+  githubUrl?: string;
+  role?: string;
+  content?: string;
+  assetId?: string;
+  imageUrl?: string;
+};
+
+async function sanityMutate(mutations: any[]) {
+  if (!SANITY_CONFIG.token) {
+    throw new Error("SANITY_API_TOKEN is missing in environment variables.");
+  }
+
+  const url = getSanityMutateUrl();
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${SANITY_CONFIG.token}`,
+    },
+    body: JSON.stringify({ mutations }),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Sanity Mutation Error (${res.status}): ${errorText}`);
+  }
+
+  return await res.json();
+}
+
+export async function createSanityPost(input: CreatePostInput) {
+  const slugValue =
+    input.slug ||
+    input.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+  const doc: Record<string, any> = {
+    _type: "post",
+    title: input.title,
+    slug: { _type: "slug", current: slugValue },
+    path: slugValue,
+    description: input.description,
+    date: input.date || new Date().toISOString().split("T")[0],
+    category: input.category || "frontend",
+    featured: Boolean(input.featured),
+    skills: input.skills || [],
+    demoUrl: input.demoUrl || "",
+    githubUrl: input.githubUrl || "",
+    role: input.role || "",
+    content: input.content || "",
+  };
+
+  if (input.assetId) {
+    doc.image = {
+      _type: "image",
+      asset: {
+        _type: "reference",
+        _ref: input.assetId,
+      },
+    };
+  }
+
+  return await sanityMutate([{ create: doc }]);
+}
+
+export async function updateSanityPost(idOrSlug: string, input: Partial<CreatePostInput>) {
+  let documentId = idOrSlug;
+  if (!idOrSlug.startsWith("drafts.") && !idOrSlug.includes("-")) {
+    const queryUrl = getSanityApiUrl(`*[_type == "post" && (path == "${idOrSlug}" || slug.current == "${idOrSlug}")][0]._id`);
+    const qRes = await fetch(queryUrl);
+    if (qRes.ok) {
+      const qJson = await qRes.json();
+      if (qJson.result) documentId = qJson.result;
+    }
+  }
+
+  const setPatch: Record<string, any> = {};
+  if (input.title !== undefined) setPatch.title = input.title;
+  if (input.description !== undefined) setPatch.description = input.description;
+  if (input.category !== undefined) setPatch.category = input.category;
+  if (input.date !== undefined) setPatch.date = input.date;
+  if (input.featured !== undefined) setPatch.featured = Boolean(input.featured);
+  if (input.skills !== undefined) setPatch.skills = input.skills;
+  if (input.demoUrl !== undefined) setPatch.demoUrl = input.demoUrl;
+  if (input.githubUrl !== undefined) setPatch.githubUrl = input.githubUrl;
+  if (input.role !== undefined) setPatch.role = input.role;
+  if (input.content !== undefined) setPatch.content = input.content;
+
+  if (input.assetId) {
+    setPatch.image = {
+      _type: "image",
+      asset: {
+        _type: "reference",
+        _ref: input.assetId,
+      },
+    };
+  }
+
+  if (input.slug) {
+    setPatch.slug = { _type: "slug", current: input.slug };
+    setPatch.path = input.slug;
+  }
+
+  return await sanityMutate([
+    {
+      patch: {
+        id: documentId,
+        set: setPatch,
+      },
+    },
+  ]);
+}
+
+export async function deleteSanityPost(idOrSlug: string) {
+  let documentId = idOrSlug;
+  const queryUrl = getSanityApiUrl(`*[_type == "post" && (path == "${idOrSlug}" || slug.current == "${idOrSlug}" || _id == "${idOrSlug}")][0]._id`);
+  const qRes = await fetch(queryUrl);
+  if (qRes.ok) {
+    const qJson = await qRes.json();
+    if (qJson.result) documentId = qJson.result;
+  }
+
+  return await sanityMutate([
+    {
+      delete: {
+        id: documentId,
+      },
+    },
+  ]);
+}
