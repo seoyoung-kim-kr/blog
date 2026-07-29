@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 export async function sendEmail({ from, subject, message }: EmailData) {
   const mailData = {
     to: process.env.AUTH_USER,
-    subject: `[BLOG] ${subject}`,
+    subject: `[PORTFOLIO] ${subject}`,
     from,
     html: `
       <h1>${subject}</h1>

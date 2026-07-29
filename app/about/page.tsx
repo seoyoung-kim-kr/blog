@@ -1,23 +1,13 @@
 import Container from "@/src/components/Container";
 import Hero from "@/src/components/Hero";
+import TechStackSection from "@/src/components/TechStackSection";
 import type { Metadata } from "next";
 import { FiUser, FiBriefcase, FiBookOpen, FiCode } from "react-icons/fi";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Seoyoung의 소개 페이지입니다.",
+  description: "프론트엔드 개발자 김서영의 개발 역량, 경력, 학력 및 기술 스택 소개 페이지입니다.",
 };
-
-const SKILL_GROUPS = [
-  {
-    title: "Frontend",
-    skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Tanstack Query/Table", "Axios", "Zustand"],
-  },
-  {
-    title: "Language & Tools",
-    skills: ["JavaScript", "TypeScript", "Python", "Git", "ESLint"],
-  },
-];
 
 const EDUCATION_LIST = [
   {
@@ -132,28 +122,7 @@ export default function AboutPage() {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {SKILL_GROUPS.map((group) => (
-                <div
-                  key={group.title}
-                  className="p-5 rounded-2xl bg-[#FEF5ED]/60 dark:bg-[#171E16]/60 border border-[#ADC2A9]/30 space-y-3"
-                >
-                  <h3 className="text-sm font-bold text-[#4B6346] dark:text-[#ADC2A9] uppercase tracking-wider">
-                    {group.title}
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {group.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-[#1E271D] text-[#2D3A2C] dark:text-[#FEF5ED] border border-[#ADC2A9]/40 shadow-sm"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <TechStackSection hideHeader />
           </section>
         </div>
       </Container>

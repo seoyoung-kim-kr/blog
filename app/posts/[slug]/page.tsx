@@ -13,7 +13,7 @@ type Props = {
 
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
-  
+
   let post;
   try {
     post = await getPostData(slug);
@@ -58,10 +58,27 @@ export default async function PostPage({ params }: Props) {
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   try {
-    const { title, description } = await getPostData(slug);
-    return { title, description };
+    const { title, description, image, path } = await getPostData(slug);
+    const bannerSrc = image || `/images/posts/${path}.png`;
+
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        type: "article",
+        url: `https://portfolio.seoyoung.dev/posts/${slug}`,
+        images: [
+          {
+            url: bannerSrc,
+            alt: title,
+          },
+        ],
+      },
+    };
   } catch (e) {
-    return { title: "Post Not Found" };
+    return { title: "포스트를 찾을 수 없습니다" };
   }
 }
 
@@ -69,4 +86,3 @@ export async function generateStaticParams() {
   const posts = await getAllPosts();
   return posts.map((post) => ({ slug: post.path }));
 }
-
