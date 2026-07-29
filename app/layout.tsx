@@ -12,13 +12,65 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://portfolio.seoyoung.dev"),
   title: {
-    default: "Seoyoung's Portfolio",
-    template: "%s | Seoyoung's Portfolio",
+    default: "김서영 | 프론트엔드 개발자 포트폴리오",
+    template: "%s | 김서영 포트폴리오",
   },
-  description: "프론트엔드 개발자 김서영의 프로젝트 포트폴리오",
+  description:
+    "프론트엔드 개발자 김서영의 프로젝트 및 기술 포트폴리오입니다. React, Next.js, TypeScript 기반의 웹 개발 프로젝트를 소개합니다.",
+  keywords: [
+    "김서영",
+    "프론트엔드",
+    "프론트엔드 개발자",
+    "개발자 포트폴리오",
+    "김서영 포트폴리오",
+    "Seoyoung",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "웹 개발자",
+  ],
+  authors: [{ name: "김서영", url: "https://portfolio.seoyoung.dev" }],
+  creator: "김서영",
+  publisher: "김서영",
   icons: {
     icon: "/favicon.ico",
+  },
+  openGraph: {
+    title: "Seoyoung | Frontend Developer Portfolio",
+    description:
+      "프론트엔드 개발자 김서영의 프로젝트 및 기술 포트폴리오입니다.",
+    url: "https://portfolio.seoyoung.dev",
+    siteName: "Seoyoung's Portfolio",
+    locale: "ko_KR",
+    type: "website",
+    images: [
+      {
+        url: "/images/favicon-logo.png",
+        width: 800,
+        height: 600,
+        alt: "Seoyoung Portfolio Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Seoyoung | Frontend Developer Portfolio",
+    description:
+      "프론트엔드 개발자 김서영의 프로젝트 및 기술 포트폴리오입니다.",
+    images: ["/images/favicon-logo.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 

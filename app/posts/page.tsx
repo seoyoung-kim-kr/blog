@@ -3,8 +3,8 @@ import { getAllPosts } from "@/src/service/posts";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Posts",
-  description: "Seoyoung's 블로그의 게시글 페이지.",
+  title: "Projects",
+  description: "프론트엔드 개발자 김서영이 진행한 다양한 개발 프로젝트와 기술 포스트 아카이브입니다.",
 };
 
 export default async function PostsPage() {

@@ -5,7 +5,7 @@ import { FiUser, FiBriefcase, FiBookOpen, FiCode } from "react-icons/fi";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Seoyoung의 소개 페이지입니다.",
+  description: "프론트엔드 개발자 김서영의 개발 역량, 경력, 학력 및 기술 스택 소개 페이지입니다.",
 };
 
 const SKILL_GROUPS = [
