@@ -30,16 +30,18 @@ export default function Hero() {
         </span>
 
         <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#2D3A2C] dark:text-[#FEF5ED] mb-4">
-          안녕하세요,{" "}
-          <span className="bg-gradient-to-r from-[#4B6346] via-[#2D3A2C] to-[#E57A7A] dark:from-[#ADC2A9] dark:to-[#FFC7C7] bg-clip-text text-transparent">
-            서영
+          안녕하세요, 프론트엔드 개발자
+          <br />
+          <span className="bg-linear-to-r from-[#4B6346] via-[#2D3A2C] to-[#E57A7A] dark:from-[#ADC2A9] dark:to-[#FFC7C7] bg-clip-text text-transparent">
+            김서영{" "}
           </span>
-          의 프로젝트 포트폴리오입니다.
+          입니다.
         </h2>
 
         <p className="text-base sm:text-lg text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80 max-w-xl mb-8 leading-relaxed font-normal">
-          직관적이고 아름다운 웹 사용자 경험을 구축하며, 문제 해결 과정과 핵심
-          기술 아키텍처를 기록한 포트폴리오 공간입니다.
+          사용자 경험과 코드의 가치를 고민하며, 직관적인 UI와 안정적인 웹 경험을
+          <br />
+          만들어가는 프론트엔드 개발자입니다.
         </p>
 
         {/* Action Buttons */}
