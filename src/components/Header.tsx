@@ -54,7 +54,7 @@ export default function Header() {
         <Link href="/" className="group flex items-center gap-2.5">
           <Image
             src="/images/favicon-logo.png"
-            alt="Seoyoung Blog Logo"
+            alt="Seoyoung Portfolio Logo"
             width={32}
             height={32}
             className="group-hover:scale-105 transition-transform duration-300 object-contain"
