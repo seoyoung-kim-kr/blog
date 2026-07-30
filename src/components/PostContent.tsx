@@ -68,10 +68,6 @@ function PostContent({ post }: { post: PostData }) {
             </div>
           )}
 
-          <p className="text-base sm:text-lg text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80 leading-relaxed font-normal max-w-2xl mx-auto">
-            {description}
-          </p>
-
           {/* Tech Stack Badges */}
           {skills && skills.length > 0 && (
             <div className="flex items-center justify-center gap-2 flex-wrap pt-1">

@@ -15,7 +15,7 @@ type Props = {
   categories: string[];
 };
 
-const ALL_POSTS = "All Projects";
+const ALL_POSTS = "All Retrospectives";
 
 export default function FilterablePosts({ posts, categories }: Props) {
   const [selected, setSelected] = useState(ALL_POSTS);
@@ -26,7 +26,13 @@ export default function FilterablePosts({ posts, categories }: Props) {
   const filtered =
     selected === ALL_POSTS
       ? posts
-      : posts.filter((post) => post.category === selected);
+      : posts.filter(
+          (post) =>
+            post.category === selected ||
+            post.type === selected ||
+            (selected === "Retrospectives" && post.type === "retrospective") ||
+            (selected === "Projects" && post.type === "project")
+        );
 
   return (
     <Container className="space-y-8">
@@ -34,10 +40,10 @@ export default function FilterablePosts({ posts, categories }: Props) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#ADC2A9]/30 pb-6">
         <div className="space-y-1 text-center md:text-left">
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#2D3A2C] dark:text-[#FEF5ED]">
-            All Projects Showcase
+            Tech Retrospectives
           </h1>
           <p className="text-[#2D3A2C]/70 dark:text-[#FEF5ED]/70 text-sm sm:text-base">
-            기술 스택 및 도메인 카테고리별로 작성된 프로젝트 포트폴리오를 확인해보세요.
+            실무 및 주요 프로젝트에서의 기술적 도전과 문제 해결 과정을 기록한 상세 회고 모음입니다.
           </p>
         </div>
 
@@ -62,7 +68,7 @@ export default function FilterablePosts({ posts, categories }: Props) {
               해당 카테고리의 프로젝트가 존재하지 않습니다.
             </div>
           ) : (
-            <PostsGrid posts={filtered} />
+            <PostsGrid posts={filtered} variant="blog" />
           )}
         </div>
 

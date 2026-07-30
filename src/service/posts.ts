@@ -1,5 +1,5 @@
 import path from "path";
-import { readFile } from "fs/promises";
+import { readFile, writeFile, unlink } from "fs/promises";
 import { cache } from "react";
 import {
   sanityFetch,
@@ -13,6 +13,8 @@ export type Post = {
   description: string;
   date: string;
   category: string;
+  type?: "project" | "retrospective";
+  company?: string;
   path: string;
   featured: boolean;
   skills?: string[];
@@ -44,13 +46,26 @@ export const getAllPosts = cache(async (): Promise<Post[]> => {
   return getLocalPosts();
 });
 
-
 export async function getFeaturedPosts(): Promise<Post[]> {
   const sanityPosts = await sanityFetch<Post[]>(FEATURED_PROJECTS_QUERY);
   if (sanityPosts && sanityPosts.length > 0) {
     return sanityPosts;
   }
-  return getAllPosts().then((posts) => posts.filter((post) => post.featured));
+  return getAllPosts().then((posts) =>
+    posts.filter((post) => post.featured || post.type === "project" || !post.type)
+  );
+}
+
+export async function getProjects(): Promise<Post[]> {
+  return getAllPosts().then((posts) =>
+    posts.filter((post) => post.type === "project" || post.featured || !post.type)
+  );
+}
+
+export async function getRetrospectives(): Promise<Post[]> {
+  return getAllPosts().then((posts) =>
+    posts.filter((post) => post.type === "retrospective")
+  );
 }
 
 export async function getCarouselPosts(): Promise<Post[]> {
@@ -89,4 +104,65 @@ export async function getPostData(fileName: string): Promise<PostData> {
     next,
     prev,
   };
+}
+
+export async function updateLocalPost(
+  slug: string,
+  input: Partial<Post & { content?: string; slug?: string }>
+): Promise<void> {
+  const filePath = path.join(process.cwd(), "data", "posts.json");
+  try {
+    const fileContent = await readFile(filePath, "utf-8");
+    const posts: Post[] = JSON.parse(fileContent);
+
+    const index = posts.findIndex(
+      (p) => p.path === slug || p.title === input.title
+    );
+
+    const newPath = input.slug || input.path || slug;
+
+    if (index !== -1) {
+      const target = posts[index];
+      posts[index] = {
+        ...target,
+        title: input.title ?? target.title,
+        description: input.description ?? target.description,
+        category: input.category ?? target.category,
+        date: input.date ?? target.date,
+        type: input.type ?? target.type,
+        company: input.company ?? target.company,
+        featured: input.featured ?? target.featured,
+        skills: input.skills ?? target.skills,
+        demoUrl: input.demoUrl ?? target.demoUrl,
+        githubUrl: input.githubUrl ?? target.githubUrl,
+        role: input.role ?? target.role,
+        image: input.image ?? target.image,
+        path: newPath,
+      };
+
+      await writeFile(filePath, JSON.stringify(posts, null, 2), "utf-8");
+    }
+
+    if (input.content !== undefined) {
+      const mdPath = path.join(process.cwd(), "data", "posts", `${newPath}.md`);
+      await writeFile(mdPath, input.content, "utf-8").catch(() => {});
+    }
+  } catch (error) {
+    console.error("updateLocalPost failed:", error);
+  }
+}
+
+export async function deleteLocalPost(slug: string): Promise<void> {
+  const filePath = path.join(process.cwd(), "data", "posts.json");
+  try {
+    const fileContent = await readFile(filePath, "utf-8");
+    const posts: Post[] = JSON.parse(fileContent);
+    const filtered = posts.filter((p) => p.path !== slug);
+    await writeFile(filePath, JSON.stringify(filtered, null, 2), "utf-8");
+
+    const mdPath = path.join(process.cwd(), "data", "posts", `${slug}.md`);
+    await unlink(mdPath).catch(() => {});
+  } catch (error) {
+    console.error("deleteLocalPost failed:", error);
+  }
 }
