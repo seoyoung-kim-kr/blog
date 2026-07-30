@@ -30,25 +30,25 @@ const ICON_MAP: Record<string, React.ElementType> = {
 
 const DEFAULT_CATEGORIES = [
   {
-    title: "Frontend & Core",
+    title: "Frontend",
     description: "반응형 웹 및 모던 컴포넌트 아키텍처 설계",
     iconName: "FiCode",
     coreSkills: ["React", "Next.js", "TypeScript", "JavaScript (ES6+)"],
-    experiencedSkills: ["HTML5/CSS3", "Web Vitals", "A11y (웹 접근성)"],
+    experiencedSkills: [],
   },
   {
     title: "State & UI System",
     description: "전역 상태, 데이터 캐싱 및 디자인 시스템",
     iconName: "FiLayers",
     coreSkills: ["TanStack Query", "Zustand", "Tailwind CSS", "shadcn/ui"],
-    experiencedSkills: ["Redux Toolkit", "Recoil", "CSS Modules", "Framer Motion"],
+    experiencedSkills: [],
   },
   {
     title: "Tools, BaaS & Infra",
     description: "개발 환경, 백엔드 연동 및 인프라",
     iconName: "FiTool",
-    coreSkills: ["Git / GitHub", "Vite", "Sanity CMS", "Node.js"],
-    experiencedSkills: ["Express", "Supabase", "Docker", "Nginx", "Vercel", "Figma"],
+    coreSkills: ["Git / GitHub", "Vite"],
+    experiencedSkills: ["Docker", "Nginx", "FastAPI", "Vercel", "Figma"],
   },
 ];
 
@@ -84,6 +84,13 @@ export default async function TechStackSection({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
         {categories.map((category) => {
           const IconComponent = ICON_MAP[category.iconName] || FiCode;
+          const validCoreSkills = (category.coreSkills || []).filter(
+            (s) => Boolean(s && s.trim())
+          );
+          const validExperiencedSkills = (
+            category.experiencedSkills || []
+          ).filter((s) => Boolean(s && s.trim()));
+          const hasExperienced = validExperiencedSkills.length > 0;
 
           return (
             <div
@@ -107,14 +114,16 @@ export default async function TechStackSection({
                 </div>
 
                 {/* Core Skills */}
-                {category.coreSkills.length > 0 && (
+                {validCoreSkills.length > 0 && (
                   <div className="space-y-1.5 pt-1">
-                    <div className="flex items-center gap-1.5 text-[11px] font-extrabold tracking-wider uppercase text-[#4B6346] dark:text-[#ADC2A9]">
-                      <FiCheckCircle className="w-3 h-3" />
-                      <span>Main Focus</span>
-                    </div>
+                    {hasExperienced && (
+                      <div className="flex items-center gap-1.5 text-[11px] font-extrabold tracking-wider uppercase text-[#4B6346] dark:text-[#ADC2A9]">
+                        <FiCheckCircle className="w-3 h-3" />
+                        <span>Main Focus</span>
+                      </div>
+                    )}
                     <div className="flex flex-wrap gap-1.5">
-                      {category.coreSkills.map((skill) => (
+                      {validCoreSkills.map((skill) => (
                         <span
                           key={skill}
                           className="px-3 py-1 rounded-full text-xs font-bold bg-[#ADC2A9]/25 dark:bg-[#ADC2A9]/20 text-[#2D3A2C] dark:text-[#FEF5ED] border border-[#ADC2A9]/50 shadow-2xs"
@@ -127,13 +136,13 @@ export default async function TechStackSection({
                 )}
 
                 {/* Experienced Skills */}
-                {category.experiencedSkills.length > 0 && (
+                {hasExperienced && (
                   <div className="space-y-1.5 pt-2 border-t border-[#ADC2A9]/20 dark:border-[#ADC2A9]/10">
                     <div className="text-[11px] font-semibold text-[#2D3A2C]/60 dark:text-[#FEF5ED]/60">
                       Experienced
                     </div>
                     <div className="flex flex-wrap gap-1.5">
-                      {category.experiencedSkills.map((skill) => (
+                      {validExperiencedSkills.map((skill) => (
                         <span
                           key={skill}
                           className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[#FEF5ED]/60 dark:bg-[#171E16]/60 text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80 border border-dashed border-[#ADC2A9]/40"
