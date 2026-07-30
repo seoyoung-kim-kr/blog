@@ -30,25 +30,25 @@ const ICON_MAP: Record<string, React.ElementType> = {
 
 const DEFAULT_CATEGORIES = [
   {
-    title: "Frontend",
+    title: "Frontend & Core",
     description: "반응형 웹 및 모던 컴포넌트 아키텍처 설계",
     iconName: "FiCode",
     coreSkills: ["React", "Next.js", "TypeScript", "JavaScript (ES6+)"],
-    experiencedSkills: [],
+    experiencedSkills: ["HTML5/CSS3", "Web Vitals", "A11y (웹 접근성)"],
   },
   {
     title: "State & UI System",
     description: "전역 상태, 데이터 캐싱 및 디자인 시스템",
     iconName: "FiLayers",
     coreSkills: ["TanStack Query", "Zustand", "Tailwind CSS", "shadcn/ui"],
-    experiencedSkills: [],
+    experiencedSkills: ["Redux Toolkit", "Recoil", "CSS Modules", "Framer Motion"],
   },
   {
     title: "Tools, BaaS & Infra",
     description: "개발 환경, 백엔드 연동 및 인프라",
     iconName: "FiTool",
-    coreSkills: ["Git / GitHub", "Vite"],
-    experiencedSkills: ["Docker", "Nginx", "FastAPI", "Vercel", "Figma"],
+    coreSkills: ["Git / GitHub", "Vite", "Sanity CMS", "Node.js"],
+    experiencedSkills: ["Express", "Supabase", "Docker", "Nginx", "FastAPI", "Vercel", "Figma"],
   },
 ];
 
@@ -116,12 +116,10 @@ export default async function TechStackSection({
                 {/* Core Skills */}
                 {validCoreSkills.length > 0 && (
                   <div className="space-y-1.5 pt-1">
-                    {hasExperienced && (
-                      <div className="flex items-center gap-1.5 text-[11px] font-extrabold tracking-wider uppercase text-[#4B6346] dark:text-[#ADC2A9]">
-                        <FiCheckCircle className="w-3 h-3" />
-                        <span>Main Focus</span>
-                      </div>
-                    )}
+                    <div className="flex items-center gap-1.5 text-[11px] font-extrabold tracking-wider uppercase text-[#4B6346] dark:text-[#ADC2A9]">
+                      <FiCheckCircle className="w-3 h-3" />
+                      <span>Main Focus</span>
+                    </div>
                     <div className="flex flex-wrap gap-1.5">
                       {validCoreSkills.map((skill) => (
                         <span

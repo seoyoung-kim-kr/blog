@@ -86,11 +86,11 @@ export const PROJECT_BY_SLUG_QUERY = `
 
 export const TECH_STACK_QUERY = `
   *[_type == "techStack"] | order(order asc) {
-    category,
-    description,
-    icon,
-    order,
-    coreSkills,
-    experiencedSkills
+    "category": category,
+    "description": description,
+    "icon": icon,
+    "order": order,
+    "coreSkills": coreSkills,
+    "experiencedSkills": experiencedSkills
   }
 `;
