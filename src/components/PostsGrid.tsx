@@ -2,14 +2,27 @@ import React from "react";
 import { Post } from "../service/posts";
 import PostCard from "./PostCard";
 
-type Props = { posts: Post[] };
+type Props = {
+  posts: Post[];
+  variant?: "home" | "blog";
+};
 
-export default function PostsGrid({ posts }: Props) {
+export default function PostsGrid({ posts, variant = "home" }: Props) {
+  if (variant === "blog") {
+    return (
+      <div className="divide-y divide-[#ADC2A9]/30 dark:divide-[#ADC2A9]/20">
+        {posts.map((post) => (
+          <PostCard key={post.path} post={post} variant="blog" />
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+    <ul className="flex flex-col space-y-4 sm:space-y-6">
       {posts.map((post) => (
-        <li key={post.path} className="h-full">
-          <PostCard post={post} />
+        <li key={post.path}>
+          <PostCard key={post.path} post={post} variant="home" />
         </li>
       ))}
     </ul>

@@ -2,7 +2,6 @@ import AdjacentPostCard from "@/src/components/AdjacentPostCard";
 import Container from "@/src/components/Container";
 import PostContent from "@/src/components/PostContent";
 import { getPostData, getAllPosts } from "@/src/service/posts";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 
 type Props = {
@@ -23,23 +22,11 @@ export default async function PostPage({ params }: Props) {
 
   if (!post) return notFound();
 
-  const { path, title, next, prev, image } = post;
-  const bannerSrc = image || `/images/posts/${path}.png`;
+  const { next, prev } = post;
 
   return (
     <Container className="py-8 sm:py-12">
       <article className="max-w-4xl mx-auto rounded-3xl overflow-hidden bg-white/80 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800/60 backdrop-blur-xl shadow-xl">
-        {/* Banner Cover Image */}
-        <div className="relative w-full aspect-[21/9] bg-slate-100 dark:bg-slate-800">
-          <Image
-            className="object-cover"
-            src={bannerSrc}
-            alt={title}
-            fill
-            priority
-          />
-        </div>
-
         {/* Post Main Body */}
         <PostContent post={post} />
 

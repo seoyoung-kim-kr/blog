@@ -7,7 +7,7 @@ export const post = defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Project Title',
+      title: 'Project / Post Title',
       type: 'string',
       validation: (rule) => rule.required(),
     }),
@@ -20,6 +20,25 @@ export const post = defineType({
         maxLength: 96,
       },
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'contentType',
+      title: 'Content Type (콘텐츠 유형)',
+      type: 'string',
+      options: {
+        list: [
+          { title: '📁 Project (프로젝트 포트폴리오)', value: 'project' },
+          { title: '📝 Retrospective (기술 회고 & 블로그)', value: 'retrospective' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'project',
+    }),
+    defineField({
+      name: 'company',
+      title: 'Company / Organization / Project Scope',
+      type: 'string',
+      description: '예: (주)썬더소프트코리아, 개인 프로젝트, 팀 프로젝트',
     }),
     defineField({
       name: 'path',
@@ -53,6 +72,7 @@ export const post = defineType({
           { title: 'Backend', value: 'backend' },
           { title: 'JavaScript', value: 'javascript' },
           { title: 'Story & Career', value: 'my-story' },
+          { title: 'Retrospective', value: 'retrospective' },
         ],
       },
       validation: (rule) => rule.required(),

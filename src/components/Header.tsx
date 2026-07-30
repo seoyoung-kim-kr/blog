@@ -15,7 +15,7 @@ type Menu = {
 const MENU_LIST: Menu[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Projects", href: "/posts" },
+  { label: "Retrospectives", href: "/posts" },
   { label: "Contact", href: "/contact" },
 ];
 

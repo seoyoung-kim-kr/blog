@@ -1,8 +1,10 @@
 import Container from "@/src/components/Container";
 import Hero from "@/src/components/Hero";
 import TechStackSection from "@/src/components/TechStackSection";
+import CoreHighlights from "@/src/components/CoreHighlights";
+import ExperienceSummary from "@/src/components/ExperienceSummary";
 import type { Metadata } from "next";
-import { FiUser, FiBriefcase, FiBookOpen, FiCode } from "react-icons/fi";
+import { FiUser, FiBookOpen, FiCode } from "react-icons/fi";
 
 export const metadata: Metadata = {
   title: "About",
@@ -41,38 +43,34 @@ export default function AboutPage() {
               </h2>
             </div>
             <p className="text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80 text-sm sm:text-base leading-relaxed space-y-2">
-              프론트엔드 개발자 <strong className="text-[#2D3A2C] dark:text-[#FEF5ED] font-bold">김서영</strong>입니다.
+              프론트엔드 개발자{" "}
+              <strong className="text-[#2D3A2C] dark:text-[#FEF5ED] font-bold">
+                김서영
+              </strong>
+              입니다.
             </p>
             <ul className="space-y-2 text-sm sm:text-base text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80 list-disc list-inside marker:text-[#ADC2A9]">
-              <li>새로운 기술에 대해 두려움 없이 도전하며, 학습하는 과정 자체를 즐깁니다.</li>
-              <li>사용자의 관점에서 생각하며, 직관적이고 편리한 UI/UX를 구현하는 데 깊은 관심을 두고 있습니다.</li>
+              <li>
+                레거시 환경의 한계를 돌파하며 React 기반 모던 플랫폼 전환과
+                아키텍처 설계를 주도해 온 4년 차 프론트엔드 리드
+              </li>
+              <li>
+                주어진 화면 개발에 머물지 않고, 고객 VOC 분석부터
+                백엔드(FastAPI) 영역까지 파고들어 비즈니스 문제를 해결하는
+                프로덕트 엔지니어
+              </li>
+              <li>
+                순수 DOM 제어부터 TanStack 생태계 기반의 데이터 캐싱까지, 기술의
+                한계를 직접 부딪히며 실무적인 문제 해결 역량 확보
+              </li>
             </ul>
           </section>
 
-          {/* Career */}
-          <section className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-[#1E271D]/90 border border-[#ADC2A9]/40 dark:border-[#ADC2A9]/20 backdrop-blur-xl shadow-lg space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-[#FFC7C7]/40 text-[#2D3A2C] dark:text-[#FEF5ED]">
-                <FiBriefcase className="w-5 h-5" />
-              </div>
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#2D3A2C] dark:text-[#FEF5ED]">
-                Career
-              </h2>
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-[#FEF5ED]/60 dark:bg-[#171E16]/60 border border-[#ADC2A9]/30">
-              <div>
-                <h3 className="font-bold text-[#2D3A2C] dark:text-[#FEF5ED] text-base">
-                  (주)썬더소프트코리아
-                </h3>
-                <p className="text-xs text-[#2D3A2C]/60 dark:text-[#FEF5ED]/60 mt-0.5">
-                  Software Engineer / Frontend
-                </p>
-              </div>
-              <span className="mt-2 sm:mt-0 text-xs font-bold text-[#2D3A2C] dark:text-[#FEF5ED] px-3 py-1 rounded-full bg-[#FFC7C7]/50 border border-[#FFC7C7] self-start sm:self-auto shadow-sm">
-                2023.01.01 ~ 현재
-              </span>
-            </div>
-          </section>
+          {/* Core Engineering Highlights (Relocated to About Page) */}
+          <CoreHighlights hideAboutLink />
+
+          {/* Career Timeline */}
+          <ExperienceSummary />
 
           {/* Education */}
           <section className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-[#1E271D]/90 border border-[#ADC2A9]/40 dark:border-[#ADC2A9]/20 backdrop-blur-xl shadow-lg space-y-4">

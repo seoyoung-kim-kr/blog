@@ -1,38 +1,42 @@
-import { SANITY_CONFIG, getSanityApiUrl } from "./sanityConfig";
+const PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "18bnd0j9";
+const DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
+const API_VERSION = "2024-01-01";
 
 export async function sanityFetch<T>(
   query: string,
-  params: Record<string, string> = {}
+  params: Record<string, any> = {}
 ): Promise<T | null> {
-  if (!SANITY_CONFIG.projectId) return null;
-
   try {
-    const url = getSanityApiUrl(query, params);
+    let url = `https://${PROJECT_ID}.api.sanity.io/v${API_VERSION}/data/query/${DATASET}?query=${encodeURIComponent(
+      query
+    )}`;
 
-    // In development or on-demand revalidation, use no-store or 10s revalidate for instant UI updates
-    const fetchOptions: RequestInit =
-      process.env.NODE_ENV === "development"
-        ? { cache: "no-store" }
-        : ({ next: { revalidate: 10, tags: ["posts"] } } as any);
+    for (const [key, value] of Object.entries(params)) {
+      url += `&$${key}=${encodeURIComponent(JSON.stringify(value))}`;
+    }
 
-    const res = await fetch(url, fetchOptions);
+    const res = await fetch(url, {
+      next: { revalidate: 0 },
+      cache: "no-store",
+    });
 
     if (!res.ok) return null;
     const json = await res.json();
-    return json.result as T;
-  } catch (e) {
-    console.warn("Sanity fetch error:", e);
+    return (json.result as T) ?? null;
+  } catch (error) {
+    console.warn("Sanity fetch warning:", error);
     return null;
   }
 }
 
-// GROQ Queries
 export const ALL_PROJECTS_QUERY = `
   *[_type == "post"] | order(date desc) {
     title,
     description,
     date,
     category,
+    "type": coalesce(contentType, "project"),
+    company,
     "path": select(defined(slug.current) => slug.current, path),
     featured,
     skills,
@@ -44,11 +48,13 @@ export const ALL_PROJECTS_QUERY = `
 `;
 
 export const FEATURED_PROJECTS_QUERY = `
-  *[_type == "post" && featured == true] | order(date desc) {
+  *[_type == "post" && (featured == true || contentType == "project")] | order(date desc) {
     title,
     description,
     date,
     category,
+    "type": coalesce(contentType, "project"),
+    company,
     "path": select(defined(slug.current) => slug.current, path),
     featured,
     skills,
@@ -65,6 +71,8 @@ export const PROJECT_BY_SLUG_QUERY = `
     description,
     date,
     category,
+    "type": coalesce(contentType, "project"),
+    company,
     "path": select(defined(slug.current) => slug.current, path),
     featured,
     skills,
@@ -86,4 +94,3 @@ export const TECH_STACK_QUERY = `
     "experiencedSkills": experiencedSkills
   }
 `;
-

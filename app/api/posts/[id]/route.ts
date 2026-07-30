@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { getPostData } from "@/src/service/posts";
+import { getPostData, updateLocalPost, deleteLocalPost } from "@/src/service/posts";
 import { updateSanityPost, deleteSanityPost } from "@/src/service/sanityWrite";
 
 export async function GET(
@@ -27,17 +27,27 @@ export async function PUT(
     const { id } = await params;
     const body = await req.json();
 
-    const updatedPost = await updateSanityPost(id, body);
+    // 1. Update local posts.json & markdown fallback
+    await updateLocalPost(id, body);
 
-    // Immediately purge Next.js Data Cache for instant UI update
-    revalidatePath("/");
-    revalidatePath("/posts");
-    revalidatePath(`/posts/${id}`);
-    if (body.slug && body.slug !== id) {
-      revalidatePath(`/posts/${body.slug}`);
+    // 2. Update Sanity CMS
+    let updatedPost;
+    try {
+      updatedPost = await updateSanityPost(id, body);
+    } catch (sanityErr) {
+      console.error("Sanity update warning:", sanityErr);
     }
 
-    return NextResponse.json({ success: true, data: updatedPost });
+    // 3. Purge Next.js cache for instant UI update
+    revalidatePath("/", "layout");
+    revalidatePath("/posts", "layout");
+    revalidatePath("/about", "layout");
+    revalidatePath(`/posts/${id}`, "layout");
+    if (body.slug && body.slug !== id) {
+      revalidatePath(`/posts/${body.slug}`, "layout");
+    }
+
+    return NextResponse.json({ success: true, data: updatedPost || { id } });
   } catch (error: any) {
     return NextResponse.json(
       { success: false, message: error.message || "Failed to update post" },
@@ -52,14 +62,21 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const result = await deleteSanityPost(id);
 
-    // Immediately purge Next.js Data Cache for instant UI update
+    // Dual deletion (Local JSON + Sanity)
+    await deleteLocalPost(id);
+    try {
+      await deleteSanityPost(id);
+    } catch (e) {
+      console.error("Sanity delete warning:", e);
+    }
+
+    // Purge Next.js cache
     revalidatePath("/");
     revalidatePath("/posts");
     revalidatePath(`/posts/${id}`);
 
-    return NextResponse.json({ success: true, data: result });
+    return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json(
       { success: false, message: error.message || "Failed to delete post" },

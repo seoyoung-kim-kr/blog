@@ -10,9 +10,16 @@ export default async function HomePage() {
     <>
       <Hero />
       <Container className="space-y-12 pb-16">
+        {/* 1. Tech Stack */}
         <TechStackSection />
-        <FeaturedPosts />
+
+        {/* 2. Career Timeline */}
         <ExperienceSummary />
+
+        {/* 3. Featured Projects Showcase */}
+        <FeaturedPosts />
+
+        {/* 4. Contact CTA */}
         <ContactCTA />
       </Container>
     </>
