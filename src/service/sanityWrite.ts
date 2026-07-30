@@ -6,6 +6,8 @@ export type CreatePostInput = {
   description: string;
   date?: string;
   category: string;
+  type?: "project" | "retrospective";
+  company?: string;
   featured?: boolean;
   skills?: string[];
   demoUrl?: string;
@@ -46,7 +48,8 @@ export async function createSanityPost(input: CreatePostInput) {
     input.title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
+      .replace(/(^-|-$)+/g, "") ||
+    `post-${Date.now()}`;
 
   const doc: Record<string, any> = {
     _type: "post",
@@ -56,6 +59,8 @@ export async function createSanityPost(input: CreatePostInput) {
     description: input.description,
     date: input.date || new Date().toISOString().split("T")[0],
     category: input.category || "frontend",
+    contentType: input.type || "project",
+    company: input.company || "",
     featured: Boolean(input.featured),
     skills: input.skills || [],
     demoUrl: input.demoUrl || "",
@@ -78,20 +83,31 @@ export async function createSanityPost(input: CreatePostInput) {
 }
 
 export async function updateSanityPost(idOrSlug: string, input: Partial<CreatePostInput>) {
-  let documentId = idOrSlug;
-  if (!idOrSlug.startsWith("drafts.") && !idOrSlug.includes("-")) {
-    const queryUrl = getSanityApiUrl(`*[_type == "post" && (path == "${idOrSlug}" || slug.current == "${idOrSlug}")][0]._id`);
+  let targetIds: string[] = [];
+
+  // 1. Query Sanity to find all matching _ids for this slug/path/_id
+  try {
+    const queryUrl = getSanityApiUrl(
+      `*[_type == "post" && (path == "${idOrSlug}" || slug.current == "${idOrSlug}" || _id == "${idOrSlug}" || _id == "drafts.${idOrSlug}")]._id`
+    );
     const qRes = await fetch(queryUrl);
     if (qRes.ok) {
       const qJson = await qRes.json();
-      if (qJson.result) documentId = qJson.result;
+      if (Array.isArray(qJson.result) && qJson.result.length > 0) {
+        targetIds = qJson.result;
+      }
     }
+  } catch (err) {
+    console.error("Sanity query error:", err);
   }
 
+  // 2. Prepare patch object
   const setPatch: Record<string, any> = {};
   if (input.title !== undefined) setPatch.title = input.title;
   if (input.description !== undefined) setPatch.description = input.description;
   if (input.category !== undefined) setPatch.category = input.category;
+  if (input.type !== undefined) setPatch.contentType = input.type;
+  if (input.company !== undefined) setPatch.company = input.company;
   if (input.date !== undefined) setPatch.date = input.date;
   if (input.featured !== undefined) setPatch.featured = Boolean(input.featured);
   if (input.skills !== undefined) setPatch.skills = input.skills;
@@ -115,30 +131,55 @@ export async function updateSanityPost(idOrSlug: string, input: Partial<CreatePo
     setPatch.path = input.slug;
   }
 
-  return await sanityMutate([
-    {
-      patch: {
-        id: documentId,
-        set: setPatch,
-      },
+  // 3. If targetIds is empty (document does not exist in Sanity yet), create it!
+  if (targetIds.length === 0) {
+    return await createSanityPost({
+      title: input.title || idOrSlug,
+      slug: input.slug || idOrSlug,
+      description: input.description || "",
+      category: input.category || "frontend",
+      date: input.date,
+      type: input.type,
+      company: input.company,
+      featured: input.featured,
+      skills: input.skills,
+      demoUrl: input.demoUrl,
+      githubUrl: input.githubUrl,
+      role: input.role,
+      content: input.content,
+      assetId: input.assetId,
+    });
+  }
+
+  // 4. Create patch mutation ONLY for document IDs that actually exist in Sanity
+  const mutations = targetIds.map((id) => ({
+    patch: {
+      id,
+      set: setPatch,
     },
-  ]);
+  }));
+
+  return await sanityMutate(mutations);
 }
 
 export async function deleteSanityPost(idOrSlug: string) {
-  let documentId = idOrSlug;
-  const queryUrl = getSanityApiUrl(`*[_type == "post" && (path == "${idOrSlug}" || slug.current == "${idOrSlug}" || _id == "${idOrSlug}")][0]._id`);
-  const qRes = await fetch(queryUrl);
-  if (qRes.ok) {
-    const qJson = await qRes.json();
-    if (qJson.result) documentId = qJson.result;
-  }
+  let targetIds: string[] = [idOrSlug];
+  try {
+    const queryUrl = getSanityApiUrl(
+      `*[_type == "post" && (path == "${idOrSlug}" || slug.current == "${idOrSlug}" || _id == "${idOrSlug}" || _id == "drafts.${idOrSlug}")]._id`
+    );
+    const qRes = await fetch(queryUrl);
+    if (qRes.ok) {
+      const qJson = await qRes.json();
+      if (Array.isArray(qJson.result) && qJson.result.length > 0) {
+        targetIds = qJson.result;
+      }
+    }
+  } catch (_) {}
 
-  return await sanityMutate([
-    {
-      delete: {
-        id: documentId,
-      },
-    },
-  ]);
+  const mutations = targetIds.map((id) => ({
+    delete: { id },
+  }));
+
+  return await sanityMutate(mutations);
 }

@@ -26,10 +26,14 @@ export default function ProjectFormModal({
   const [description, setDescription] = useState(initialPost?.description || "");
   const [date, setDate] = useState(initialPost?.date || new Date().toISOString().split("T")[0]);
   const [category, setCategory] = useState(initialPost?.category || "frontend");
+  const [type, setType] = useState<"project" | "retrospective">(
+    initialPost?.type || "project"
+  );
   const [featured, setFeatured] = useState(initialPost?.featured || false);
   const [skills, setSkills] = useState(initialPost?.skills ? initialPost.skills.join(", ") : "");
   const [demoUrl, setDemoUrl] = useState(initialPost?.demoUrl || "");
   const [githubUrl, setGithubUrl] = useState(initialPost?.githubUrl || "");
+  const [company, setCompany] = useState(initialPost?.company || "");
   const [role, setRole] = useState(initialPost?.role || "");
   const [content, setContent] = useState(initialPost?.content || "");
 
@@ -96,6 +100,8 @@ export default function ProjectFormModal({
       description,
       date,
       category,
+      type,
+      company,
       featured,
       skills: skillArray,
       demoUrl,
@@ -231,16 +237,47 @@ export default function ProjectFormModal({
 
           <div>
             <label className="block font-bold mb-1 text-[#2D3A2C] dark:text-[#FEF5ED]">
-              한 줄 설명 *
+              프로젝트 개요 / 핵심 설명 (마크다운 지원) *
             </label>
-            <input
-              type="text"
+            <textarea
+              rows={4}
               required
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="프로젝트 핵심 성과 및 소개"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#1E271D] focus:outline-none focus:border-[#ADC2A9]"
+              placeholder="프로젝트 개요 및 핵심 성과를 마크다운 문법으로 자유롭게 작성하세요 (# 제목, > 인용구, * 리스트 등)"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#1E271D] font-mono text-xs focus:outline-none focus:border-[#ADC2A9]"
             />
+          </div>
+
+          {/* Content Type Selector */}
+          <div>
+            <label className="block font-bold mb-1.5 text-[#2D3A2C] dark:text-[#FEF5ED]">
+              콘텐츠 유형 *
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setType("project")}
+                className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                  type === "project"
+                    ? "bg-[#ADC2A9] text-[#2D3A2C] border-[#ADC2A9] shadow-sm"
+                    : "bg-gray-50 dark:bg-[#1E271D] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-[#ADC2A9]"
+                }`}
+              >
+                <span>📁 프로젝트 (Projects)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setType("retrospective")}
+                className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                  type === "retrospective"
+                    ? "bg-[#ADC2A9] text-[#2D3A2C] border-[#ADC2A9] shadow-sm"
+                    : "bg-gray-50 dark:bg-[#1E271D] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-[#ADC2A9]"
+                }`}
+              >
+                <span>📝 기술 회고 (Retrospectives)</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -257,6 +294,7 @@ export default function ProjectFormModal({
                 <option value="backend">backend</option>
                 <option value="javascript">javascript</option>
                 <option value="my-story">my-story</option>
+                <option value="retrospective">retrospective</option>
               </select>
             </div>
 
@@ -287,10 +325,23 @@ export default function ProjectFormModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block font-bold mb-1 text-[#2D3A2C] dark:text-[#FEF5ED]">
-                기술 스택 (쉼표로 구분)
+                소속 / 프로젝트 구분
+              </label>
+              <input
+                type="text"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                placeholder="예: (주)썬더소프트코리아 / 개인 프로젝트"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#1E271D] focus:outline-none focus:border-[#ADC2A9]"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold mb-1 text-[#2D3A2C] dark:text-[#FEF5ED]">
+                기술 스택 (쉼표 구별)
               </label>
               <input
                 type="text"
@@ -309,7 +360,7 @@ export default function ProjectFormModal({
                 type="text"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                placeholder="Frontend Engineer (100%)"
+                placeholder="Frontend Lead (80%)"
                 className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#1E271D] focus:outline-none focus:border-[#ADC2A9]"
               />
             </div>

@@ -29,8 +29,9 @@ export async function POST(req: Request) {
     const createdPost = await createSanityPost(body);
 
     // Immediately purge Next.js Data Cache for instant UI update
-    revalidatePath("/");
-    revalidatePath("/posts");
+    revalidatePath("/", "layout");
+    revalidatePath("/posts", "layout");
+    revalidatePath("/about", "layout");
 
     return NextResponse.json({ success: true, data: createdPost }, { status: 201 });
   } catch (error: any) {
