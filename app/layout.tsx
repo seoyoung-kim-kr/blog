@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
 import { AdminProvider } from "@/src/context/AdminContext";
+import { SITE_CONFIG } from "@/src/constants/site";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://portfolio.seoyoung.dev"),
+  metadataBase: new URL(SITE_CONFIG.url),
   title: {
     default: "김서영 | 프론트엔드 개발자 포트폴리오",
     template: "%s | 김서영 포트폴리오",
@@ -31,9 +32,9 @@ export const metadata: Metadata = {
     "TypeScript",
     "웹 개발자",
   ],
-  authors: [{ name: "김서영", url: "https://portfolio.seoyoung.dev" }],
-  creator: "김서영",
-  publisher: "김서영",
+  authors: [{ name: SITE_CONFIG.author.name, url: SITE_CONFIG.url }],
+  creator: SITE_CONFIG.author.name,
+  publisher: SITE_CONFIG.author.name,
   icons: {
     icon: "/favicon.ico",
   },
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
     title: "Seoyoung | Frontend Developer Portfolio",
     description:
       "프론트엔드 개발자 김서영의 프로젝트 및 기술 포트폴리오입니다.",
-    url: "https://portfolio.seoyoung.dev",
+    url: SITE_CONFIG.url,
     siteName: "Seoyoung's Portfolio",
     locale: "ko_KR",
     type: "website",

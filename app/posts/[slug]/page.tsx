@@ -2,6 +2,7 @@ import AdjacentPostCard from "@/src/components/AdjacentPostCard";
 import Container from "@/src/components/Container";
 import PostContent from "@/src/components/PostContent";
 import { getPostData, getAllPosts } from "@/src/service/posts";
+import { SITE_CONFIG } from "@/src/constants/site";
 import { notFound } from "next/navigation";
 
 type Props = {
@@ -55,7 +56,7 @@ export async function generateMetadata({ params }: Props) {
         title,
         description,
         type: "article",
-        url: `https://portfolio.seoyoung.dev/posts/${slug}`,
+        url: `${SITE_CONFIG.url}/posts/${slug}`,
         images: [
           {
             url: bannerSrc,

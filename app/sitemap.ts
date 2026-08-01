@@ -1,8 +1,9 @@
 import { MetadataRoute } from "next";
 import { getAllPosts } from "@/src/service/posts";
+import { SITE_CONFIG } from "@/src/constants/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://portfolio.seoyoung.dev";
+  const baseUrl = SITE_CONFIG.url;
 
   // 동적 포스트 / 프로젝트 경로 가져오기
   const posts = await getAllPosts().catch(() => []);
