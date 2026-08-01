@@ -68,10 +68,6 @@ export async function getRetrospectives(): Promise<Post[]> {
   );
 }
 
-export async function getCarouselPosts(): Promise<Post[]> {
-  return getAllPosts().then((posts) => posts.filter((post) => !post.featured));
-}
-
 export async function getPostData(fileName: string): Promise<PostData> {
   const posts = await getAllPosts();
   const currentIndex = posts.findIndex((post) => post.path === fileName);
