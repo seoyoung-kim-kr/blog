@@ -2,6 +2,10 @@ import React from "react";
 import Link from "next/link";
 import { FiBriefcase, FiArrowRight, FiCheckCircle } from "react-icons/fi";
 
+type Props = {
+  hideAboutLink?: boolean;
+};
+
 export const CAREER_TIMELINE = [
   {
     company: "(주)썬더소프트코리아",
@@ -26,7 +30,7 @@ export const CAREER_TIMELINE = [
   },
 ];
 
-export default function ExperienceSummary() {
+export default function ExperienceSummary({ hideAboutLink = false }: Props) {
   return (
     <section className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-[#1E271D]/90 border border-[#ADC2A9]/40 dark:border-[#ADC2A9]/20 backdrop-blur-xl shadow-md space-y-6">
       <div className="flex items-center justify-between border-b border-[#ADC2A9]/30 pb-4">
@@ -44,13 +48,15 @@ export default function ExperienceSummary() {
           </div>
         </div>
 
-        <Link
-          href="/about"
-          className="inline-flex items-center gap-1 text-xs font-bold text-[#4B6346] dark:text-[#ADC2A9] hover:underline"
-        >
-          <span>자세한 소개 보기</span>
-          <FiArrowRight className="w-3.5 h-3.5" />
-        </Link>
+        {!hideAboutLink && (
+          <Link
+            href="/about"
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#4B6346] dark:text-[#ADC2A9] hover:underline"
+          >
+            <span>자세한 소개 보기</span>
+            <FiArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        )}
       </div>
 
       <div className="space-y-6 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-[#ADC2A9]/30">

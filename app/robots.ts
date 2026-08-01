@@ -1,8 +1,7 @@
 import { MetadataRoute } from "next";
+import { SITE_CONFIG } from "@/src/constants/site";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://portfolio.seoyoung.dev";
-
   return {
     rules: [
       {
@@ -11,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/sy-admin/", "/api/"],
       },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: `${SITE_CONFIG.url}/sitemap.xml`,
   };
 }

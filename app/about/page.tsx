@@ -70,7 +70,7 @@ export default function AboutPage() {
           <CoreHighlights hideAboutLink />
 
           {/* Career Timeline */}
-          <ExperienceSummary />
+          <ExperienceSummary hideAboutLink />
 
           {/* Education */}
           <section className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-[#1E271D]/90 border border-[#ADC2A9]/40 dark:border-[#ADC2A9]/20 backdrop-blur-xl shadow-lg space-y-4">

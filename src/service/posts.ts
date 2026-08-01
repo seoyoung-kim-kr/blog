@@ -1,5 +1,3 @@
-import path from "path";
-import { readFile, writeFile, unlink } from "fs/promises";
 import { cache } from "react";
 import {
   sanityFetch,
@@ -30,20 +28,9 @@ export type PostData = Post & {
   prev: Post | null;
 };
 
-// Fallback to local posts.json if Sanity is not connected or returns empty
-async function getLocalPosts(): Promise<Post[]> {
-  const filePath = path.join(process.cwd(), "data", "posts.json");
-  return readFile(filePath, "utf-8")
-    .then<Post[]>(JSON.parse)
-    .then((posts) => posts.sort((a, b) => (a.date > b.date ? -1 : 1)));
-}
-
 export const getAllPosts = cache(async (): Promise<Post[]> => {
   const sanityPosts = await sanityFetch<Post[]>(ALL_PROJECTS_QUERY);
-  if (sanityPosts && sanityPosts.length > 0) {
-    return sanityPosts;
-  }
-  return getLocalPosts();
+  return sanityPosts || [];
 });
 
 export async function getFeaturedPosts(): Promise<Post[]> {
@@ -68,10 +55,6 @@ export async function getRetrospectives(): Promise<Post[]> {
   );
 }
 
-export async function getCarouselPosts(): Promise<Post[]> {
-  return getAllPosts().then((posts) => posts.filter((post) => !post.featured));
-}
-
 export async function getPostData(fileName: string): Promise<PostData> {
   const posts = await getAllPosts();
   const currentIndex = posts.findIndex((post) => post.path === fileName);
@@ -91,78 +74,13 @@ export async function getPostData(fileName: string): Promise<PostData> {
     };
   }
 
-  // Fallback to local markdown file
-  const filePath = path.join(process.cwd(), "data/posts", `${fileName}.md`);
   const post = posts.find((post) => post.path === fileName);
-  if (!post) throw `${fileName} not found`;
-
-  const content = await readFile(filePath, "utf-8").catch(() => "");
+  if (!post) throw new Error(`${fileName} not found`);
 
   return {
     ...post,
-    content,
+    content: "",
     next,
     prev,
   };
-}
-
-export async function updateLocalPost(
-  slug: string,
-  input: Partial<Post & { content?: string; slug?: string }>
-): Promise<void> {
-  const filePath = path.join(process.cwd(), "data", "posts.json");
-  try {
-    const fileContent = await readFile(filePath, "utf-8");
-    const posts: Post[] = JSON.parse(fileContent);
-
-    const index = posts.findIndex(
-      (p) => p.path === slug || p.title === input.title
-    );
-
-    const newPath = input.slug || input.path || slug;
-
-    if (index !== -1) {
-      const target = posts[index];
-      posts[index] = {
-        ...target,
-        title: input.title ?? target.title,
-        description: input.description ?? target.description,
-        category: input.category ?? target.category,
-        date: input.date ?? target.date,
-        type: input.type ?? target.type,
-        company: input.company ?? target.company,
-        featured: input.featured ?? target.featured,
-        skills: input.skills ?? target.skills,
-        demoUrl: input.demoUrl ?? target.demoUrl,
-        githubUrl: input.githubUrl ?? target.githubUrl,
-        role: input.role ?? target.role,
-        image: input.image ?? target.image,
-        path: newPath,
-      };
-
-      await writeFile(filePath, JSON.stringify(posts, null, 2), "utf-8");
-    }
-
-    if (input.content !== undefined) {
-      const mdPath = path.join(process.cwd(), "data", "posts", `${newPath}.md`);
-      await writeFile(mdPath, input.content, "utf-8").catch(() => {});
-    }
-  } catch (error) {
-    console.error("updateLocalPost failed:", error);
-  }
-}
-
-export async function deleteLocalPost(slug: string): Promise<void> {
-  const filePath = path.join(process.cwd(), "data", "posts.json");
-  try {
-    const fileContent = await readFile(filePath, "utf-8");
-    const posts: Post[] = JSON.parse(fileContent);
-    const filtered = posts.filter((p) => p.path !== slug);
-    await writeFile(filePath, JSON.stringify(filtered, null, 2), "utf-8");
-
-    const mdPath = path.join(process.cwd(), "data", "posts", `${slug}.md`);
-    await unlink(mdPath).catch(() => {});
-  } catch (error) {
-    console.error("deleteLocalPost failed:", error);
-  }
 }
