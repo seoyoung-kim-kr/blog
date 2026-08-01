@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { getPostData, updateLocalPost, deleteLocalPost } from "@/src/service/posts";
+import { getPostData } from "@/src/service/posts";
 import { updateSanityPost, deleteSanityPost } from "@/src/service/sanityWrite";
 
 export async function GET(
@@ -27,10 +27,7 @@ export async function PUT(
     const { id } = await params;
     const body = await req.json();
 
-    // 1. Update local posts.json & markdown fallback
-    await updateLocalPost(id, body);
-
-    // 2. Update Sanity CMS
+    // 1. Update Sanity CMS
     let updatedPost;
     try {
       updatedPost = await updateSanityPost(id, body);
@@ -38,7 +35,7 @@ export async function PUT(
       console.error("Sanity update warning:", sanityErr);
     }
 
-    // 3. Purge Next.js cache for instant UI update
+    // 2. Purge Next.js cache for instant UI update
     revalidatePath("/", "layout");
     revalidatePath("/posts", "layout");
     revalidatePath("/about", "layout");
@@ -63,8 +60,7 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    // Dual deletion (Local JSON + Sanity)
-    await deleteLocalPost(id);
+    // Sanity deletion
     try {
       await deleteSanityPost(id);
     } catch (e) {
@@ -72,9 +68,9 @@ export async function DELETE(
     }
 
     // Purge Next.js cache
-    revalidatePath("/");
-    revalidatePath("/posts");
-    revalidatePath(`/posts/${id}`);
+    revalidatePath("/", "layout");
+    revalidatePath("/posts", "layout");
+    revalidatePath(`/posts/${id}`, "layout");
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
