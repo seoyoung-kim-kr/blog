@@ -1,6 +1,4 @@
-import Image from "next/image";
 import Link from "next/link";
-import profileImage from "../../public/images/profile.png";
 import { FiArrowRight, FiMail } from "react-icons/fi";
 
 export default function Hero() {
@@ -11,18 +9,6 @@ export default function Hero() {
       <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-[#FFC7C7]/20 dark:bg-[#FFC7C7]/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
       <div className="max-w-3xl mx-auto flex flex-col items-center text-center">
-        {/* Profile Image with Ring */}
-        <div className="relative p-1 rounded-full bg-gradient-to-tr from-[#ADC2A9] via-[#8AA385] to-[#FFC7C7] shadow-xl mb-6 hover:scale-105 transition-transform duration-500">
-          <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden relative border-2 border-[#FEF5ED] dark:border-[#171E16]">
-            <Image
-              src={profileImage}
-              alt="Seoyoung Profile"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        </div>
 
         {/* Headline & Bio */}
         <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-[#FFC7C7]/40 text-[#2D3A2C] dark:text-[#FEF5ED] border border-[#FFC7C7]/60 mb-4 shadow-sm">
