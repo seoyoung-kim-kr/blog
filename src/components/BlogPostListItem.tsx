@@ -4,8 +4,12 @@ import React, { useState } from "react";
 import type { Post } from "../service/posts";
 import Link from "next/link";
 import { useAdmin } from "../context/AdminContext";
-import ProjectFormModal from "./ProjectFormModal";
+import dynamic from "next/dynamic";
 import { useDeleteProject } from "../hooks/useDeleteProject";
+
+const ProjectFormModal = dynamic(() => import("./ProjectFormModal"), {
+  ssr: false,
+});
 import {
   FiCalendar,
   FiArrowRight,

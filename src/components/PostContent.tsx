@@ -6,9 +6,13 @@ import { FiGithub, FiExternalLink, FiLayers, FiEdit2, FiTrash2, FiUserCheck } fr
 import { PostData } from "../service/posts";
 import MarkdownViewer from "./MarkdownViewer";
 import { useAdmin } from "../context/AdminContext";
-import ProjectFormModal from "./ProjectFormModal";
+import dynamic from "next/dynamic";
 import { useDeleteProject } from "../hooks/useDeleteProject";
 import { useRouter } from "next/navigation";
+
+const ProjectFormModal = dynamic(() => import("./ProjectFormModal"), {
+  ssr: false,
+});
 
 function PostContent({ post }: { post: PostData }) {
   const { path, title, date, description, content, category, skills, githubUrl, demoUrl, role } = post;
