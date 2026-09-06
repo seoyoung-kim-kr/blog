@@ -15,7 +15,7 @@ export default function Hero() {
           💻 Frontend Engineer & Portfolio
         </span>
 
-        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#2D3A2C] dark:text-[#FEF5ED] mb-4">
+        <h2 className="text-2xl xs:text-3xl sm:text-5xl font-extrabold tracking-tight text-[#2D3A2C] dark:text-[#FEF5ED] mb-4 break-keep">
           안녕하세요, 프론트엔드 개발자
           <br />
           <span className="bg-linear-to-r from-[#4B6346] via-[#2D3A2C] to-[#E57A7A] dark:from-[#ADC2A9] dark:to-[#FFC7C7] bg-clip-text text-transparent">
@@ -24,9 +24,8 @@ export default function Hero() {
           입니다.
         </h2>
 
-        <p className="text-base sm:text-lg text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80 max-w-xl mb-8 leading-relaxed font-normal">
+        <p className="text-sm sm:text-lg text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80 max-w-xl mb-8 leading-relaxed font-normal break-keep">
           사용자 경험과 코드의 가치를 고민하며, 직관적인 UI와 안정적인 웹 경험을
-          <br />
           만들어가는 프론트엔드 개발자입니다.
         </p>
 
