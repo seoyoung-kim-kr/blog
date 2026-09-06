@@ -4,7 +4,8 @@ const API_VERSION = "2024-01-01";
 
 export async function sanityFetch<T>(
   query: string,
-  params: Record<string, any> = {}
+  params: Record<string, any> = {},
+  revalidateSeconds: number = 60
 ): Promise<T | null> {
   try {
     let url = `https://${PROJECT_ID}.api.sanity.io/v${API_VERSION}/data/query/${DATASET}?query=${encodeURIComponent(
@@ -16,8 +17,7 @@ export async function sanityFetch<T>(
     }
 
     const res = await fetch(url, {
-      next: { revalidate: 0 },
-      cache: "no-store",
+      next: { revalidate: revalidateSeconds },
     });
 
     if (!res.ok) return null;

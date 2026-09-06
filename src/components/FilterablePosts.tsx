@@ -6,9 +6,13 @@ import PostsGrid from "./PostsGrid";
 import Categories from "./Categories";
 import Container from "./Container";
 import { useAdmin } from "../context/AdminContext";
-import ProjectFormModal from "./ProjectFormModal";
+import dynamic from "next/dynamic";
 import { FiPlus } from "react-icons/fi";
 import { useRouter } from "next/navigation";
+
+const ProjectFormModal = dynamic(() => import("./ProjectFormModal"), {
+  ssr: false,
+});
 
 type Props = {
   posts: Post[];

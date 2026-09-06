@@ -3,8 +3,13 @@
 import React, { useState } from "react";
 import Container from "@/src/components/Container";
 import { useAdmin } from "@/src/context/AdminContext";
-import ProjectFormModal from "@/src/components/ProjectFormModal";
+import dynamic from "next/dynamic";
 import Link from "next/link";
+
+const ProjectFormModal = dynamic(
+  () => import("@/src/components/ProjectFormModal"),
+  { ssr: false }
+);
 import {
   FiShield,
   FiUnlock,
