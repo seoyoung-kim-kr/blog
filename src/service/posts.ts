@@ -11,7 +11,6 @@ export type Post = {
   description: string;
   date: string;
   category: string;
-  type?: "project" | "retrospective";
   company?: string;
   path: string;
   featured: boolean;
@@ -39,19 +38,7 @@ export async function getFeaturedPosts(): Promise<Post[]> {
     return sanityPosts;
   }
   return getAllPosts().then((posts) =>
-    posts.filter((post) => post.featured || post.type === "project" || !post.type)
-  );
-}
-
-export async function getProjects(): Promise<Post[]> {
-  return getAllPosts().then((posts) =>
-    posts.filter((post) => post.type === "project" || post.featured || !post.type)
-  );
-}
-
-export async function getRetrospectives(): Promise<Post[]> {
-  return getAllPosts().then((posts) =>
-    posts.filter((post) => post.type === "retrospective")
+    posts.filter((post) => post.featured)
   );
 }
 

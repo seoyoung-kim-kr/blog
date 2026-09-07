@@ -6,7 +6,6 @@ export type CreatePostInput = {
   description: string;
   date?: string;
   category: string;
-  type?: "project" | "retrospective";
   company?: string;
   featured?: boolean;
   skills?: string[];
@@ -59,7 +58,6 @@ export async function createSanityPost(input: CreatePostInput) {
     description: input.description,
     date: input.date || new Date().toISOString().split("T")[0],
     category: input.category || "frontend",
-    contentType: input.type || "project",
     company: input.company || "",
     featured: Boolean(input.featured),
     skills: input.skills || [],
@@ -106,7 +104,6 @@ export async function updateSanityPost(idOrSlug: string, input: Partial<CreatePo
   if (input.title !== undefined) setPatch.title = input.title;
   if (input.description !== undefined) setPatch.description = input.description;
   if (input.category !== undefined) setPatch.category = input.category;
-  if (input.type !== undefined) setPatch.contentType = input.type;
   if (input.company !== undefined) setPatch.company = input.company;
   if (input.date !== undefined) setPatch.date = input.date;
   if (input.featured !== undefined) setPatch.featured = Boolean(input.featured);
@@ -139,7 +136,6 @@ export async function updateSanityPost(idOrSlug: string, input: Partial<CreatePo
       description: input.description || "",
       category: input.category || "frontend",
       date: input.date,
-      type: input.type,
       company: input.company,
       featured: input.featured,
       skills: input.skills,

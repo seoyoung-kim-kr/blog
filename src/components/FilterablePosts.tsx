@@ -6,37 +6,24 @@ import PostsGrid from "./PostsGrid";
 import Categories from "./Categories";
 import Container from "./Container";
 import { useAdmin } from "../context/AdminContext";
-import dynamic from "next/dynamic";
+import Link from "next/link";
 import { FiPlus } from "react-icons/fi";
-import { useRouter } from "next/navigation";
-
-const ProjectFormModal = dynamic(() => import("./ProjectFormModal"), {
-  ssr: false,
-});
 
 type Props = {
   posts: Post[];
   categories: string[];
 };
 
-const ALL_POSTS = "All Retrospectives";
+const ALL_POSTS = "All Posts";
 
 export default function FilterablePosts({ posts, categories }: Props) {
   const [selected, setSelected] = useState(ALL_POSTS);
   const { isAdmin } = useAdmin();
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const router = useRouter();
 
   const filtered =
     selected === ALL_POSTS
       ? posts
-      : posts.filter(
-          (post) =>
-            post.category === selected ||
-            post.type === selected ||
-            (selected === "Retrospectives" && post.type === "retrospective") ||
-            (selected === "Projects" && post.type === "project")
-        );
+      : posts.filter((post) => post.category === selected);
 
   return (
     <Container className="space-y-8">
@@ -53,13 +40,13 @@ export default function FilterablePosts({ posts, categories }: Props) {
 
         {/* Admin Create Button */}
         {isAdmin && (
-          <button
-            onClick={() => setIsCreateOpen(true)}
+          <Link
+            href="/sy-admin/write"
             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#ADC2A9] hover:bg-[#9BB397] text-[#2D3A2C] text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all active:scale-95 border border-[#ADC2A9]/60 shrink-0 self-center md:self-auto"
           >
             <FiPlus className="w-4 h-4" />
             <span>New Project</span>
-          </button>
+          </Link>
         )}
       </div>
 
@@ -95,15 +82,7 @@ export default function FilterablePosts({ posts, categories }: Props) {
           </div>
         </aside>
       </div>
-
-      {/* Create Project Modal */}
-      {isCreateOpen && (
-        <ProjectFormModal
-          isOpen={isCreateOpen}
-          onClose={() => setIsCreateOpen(false)}
-          onSuccess={() => router.refresh()}
-        />
-      )}
     </Container>
   );
 }
+
