@@ -42,13 +42,14 @@ async function sanityMutate(mutations: any[]) {
 }
 
 export async function createSanityPost(input: CreatePostInput) {
+  const baseSlug = input.title
+    .toLowerCase()
+    .replace(/[^a-z0-9가-힣]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+    
   const slugValue =
     input.slug ||
-    input.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)+/g, "") ||
-    `post-${Date.now()}`;
+    (baseSlug ? `${baseSlug}-${Date.now().toString(36)}` : `post-${Date.now()}`);
 
   const doc: Record<string, any> = {
     _type: "post",

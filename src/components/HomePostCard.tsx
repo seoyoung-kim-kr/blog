@@ -93,9 +93,11 @@ export default function HomePostCard({ post }: Props) {
         </div>
 
         {/* Description / Markdown Preview */}
-        <div className="text-sm text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80 leading-relaxed font-normal">
-          <MarkdownViewer content={description} />
-        </div>
+        {description && (
+          <div className="text-sm text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80 leading-relaxed font-normal">
+            <MarkdownViewer content={description} />
+          </div>
+        )}
 
       </div>
 

@@ -16,7 +16,7 @@ export default function AdjacentPostCard({
   return (
     <Link
       href={`/posts/${path}`}
-      className="group flex-1 flex items-center gap-4 p-5 sm:p-6 rounded-2xl bg-white/80 dark:bg-[#1E271D]/80 border border-[#ADC2A9]/40 dark:border-[#ADC2A9]/20 backdrop-blur-md hover:bg-white dark:hover:bg-[#1E271D] shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+      className="group flex-1 min-w-0 w-full flex items-center gap-4 p-5 sm:p-6 rounded-2xl bg-white/80 dark:bg-[#1E271D]/80 border border-[#ADC2A9]/40 dark:border-[#ADC2A9]/20 backdrop-blur-md hover:bg-white dark:hover:bg-[#1E271D] shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
     >
       {isPrev && (
         <div className="w-10 h-10 rounded-full bg-[#ADC2A9]/30 dark:bg-[#ADC2A9]/20 flex items-center justify-center text-[#2D3A2C] dark:text-[#FEF5ED] shrink-0 group-hover:-translate-x-1 transition-transform">
@@ -31,9 +31,6 @@ export default function AdjacentPostCard({
         <h3 className="text-sm sm:text-base font-bold text-[#2D3A2C] dark:text-[#FEF5ED] truncate group-hover:text-[#4B6346] dark:group-hover:text-[#ADC2A9] transition-colors">
           {title}
         </h3>
-        <p className="text-xs text-[#2D3A2C]/60 dark:text-[#FEF5ED]/60 truncate mt-0.5">
-          {description}
-        </p>
       </div>
 
       {!isPrev && (

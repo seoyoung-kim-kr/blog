@@ -27,13 +27,13 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <Container className="py-8 sm:py-12">
-      <article className="max-w-4xl mx-auto rounded-3xl overflow-hidden bg-white/80 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800/60 backdrop-blur-xl shadow-xl">
+      <article className="max-w-4xl mx-auto">
         {/* Post Main Body */}
         <PostContent post={post} />
 
         {/* Adjacent Navigation */}
-        <section className="p-6 sm:p-10 pt-0 border-t border-slate-200/60 dark:border-slate-800/60 mt-8">
-          <div className="flex flex-col sm:flex-row gap-4 pt-6">
+        <section className="p-6 sm:p-10 border-t border-slate-200/60 dark:border-slate-800/60">
+          <div className="flex flex-col sm:flex-row gap-4">
             {prev && <AdjacentPostCard post={prev} type="prev" />}
             {next && <AdjacentPostCard post={next} type="next" />}
           </div>

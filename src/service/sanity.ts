@@ -33,6 +33,7 @@ export const ALL_PROJECTS_QUERY = `
   *[_type == "post"] | order(date desc) {
     title,
     description,
+    content,
     date,
     category,
     company,
@@ -50,6 +51,7 @@ export const FEATURED_PROJECTS_QUERY = `
   *[_type == "post" && featured == true] | order(date desc) {
     title,
     description,
+    content,
     date,
     category,
     company,

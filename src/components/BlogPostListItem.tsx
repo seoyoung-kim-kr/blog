@@ -69,15 +69,17 @@ export default function BlogPostListItem({ post }: Props) {
 
       {/* Title */}
       <Link href={`/posts/${path}`} className="block">
-        <h2 className="text-xl sm:text-2xl font-bold text-[#2D3A2C] dark:text-[#FEF5ED] group-hover:text-[#4B6346] dark:group-hover:text-[#ADC2A9] transition-colors leading-snug">
+        <h2 className="text-lg sm:text-xl font-bold text-[#2D3A2C] dark:text-[#FEF5ED] group-hover:text-[#4B6346] dark:group-hover:text-[#ADC2A9] transition-colors leading-snug">
           {title}
         </h2>
       </Link>
 
       {/* Short Description */}
-      <p className="text-sm sm:text-base text-[#2D3A2C]/75 dark:text-[#FEF5ED]/75 leading-relaxed line-clamp-2 font-normal">
-        {description}
-      </p>
+      {post.content && (
+        <p className="text-sm sm:text-base text-[#2D3A2C]/75 dark:text-[#FEF5ED]/75 leading-relaxed line-clamp-2 font-normal">
+          {post.content.replace(/[#*`_[\]()>\-!]/g, "")}
+        </p>
+      )}
 
       {/* Footer: Skills Tags & Read Link */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
@@ -104,4 +106,3 @@ export default function BlogPostListItem({ post }: Props) {
     </article>
   );
 }
-
