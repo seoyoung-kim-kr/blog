@@ -21,19 +21,7 @@ export const post = defineType({
       },
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: 'contentType',
-      title: 'Content Type (콘텐츠 유형)',
-      type: 'string',
-      options: {
-        list: [
-          { title: '📁 Project (프로젝트 포트폴리오)', value: 'project' },
-          { title: '📝 Retrospective (기술 회고 & 블로그)', value: 'retrospective' },
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'project',
-    }),
+
     defineField({
       name: 'company',
       title: 'Company / Organization / Project Scope',

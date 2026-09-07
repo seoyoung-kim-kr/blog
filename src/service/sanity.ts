@@ -35,7 +35,6 @@ export const ALL_PROJECTS_QUERY = `
     description,
     date,
     category,
-    "type": coalesce(contentType, "project"),
     company,
     "path": select(defined(slug.current) => slug.current, path),
     featured,
@@ -48,12 +47,11 @@ export const ALL_PROJECTS_QUERY = `
 `;
 
 export const FEATURED_PROJECTS_QUERY = `
-  *[_type == "post" && (featured == true || contentType == "project")] | order(date desc) {
+  *[_type == "post" && featured == true] | order(date desc) {
     title,
     description,
     date,
     category,
-    "type": coalesce(contentType, "project"),
     company,
     "path": select(defined(slug.current) => slug.current, path),
     featured,
@@ -71,7 +69,6 @@ export const PROJECT_BY_SLUG_QUERY = `
     description,
     date,
     category,
-    "type": coalesce(contentType, "project"),
     company,
     "path": select(defined(slug.current) => slug.current, path),
     featured,
