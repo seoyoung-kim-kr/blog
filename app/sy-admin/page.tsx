@@ -3,16 +3,9 @@
 import React, { useState } from "react";
 import Container from "@/src/components/Container";
 import { useAdmin } from "@/src/context/AdminContext";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-
-const ProjectFormModal = dynamic(
-  () => import("@/src/components/ProjectFormModal"),
-  { ssr: false }
-);
 import {
   FiShield,
-  FiUnlock,
   FiPlus,
   FiArrowRight,
   FiLogOut,
@@ -26,7 +19,6 @@ export default function SecretAdminPage() {
   const [passcode, setPasscode] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -128,13 +120,13 @@ export default function SecretAdminPage() {
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <button
-                onClick={() => setIsCreateOpen(true)}
+              <Link
+                href="/sy-admin/write"
                 className="flex items-center justify-center gap-2 p-4 rounded-2xl bg-[#ADC2A9]/30 hover:bg-[#ADC2A9]/50 text-[#2D3A2C] dark:text-[#FEF5ED] font-bold text-sm border border-[#ADC2A9]/60 transition-all active:scale-95 shadow-sm"
               >
                 <FiPlus className="w-4 h-4" />
                 <span>새 프로젝트 작성</span>
-              </button>
+              </Link>
 
               <Link
                 href="/posts"
@@ -153,20 +145,9 @@ export default function SecretAdminPage() {
               이제 사이트 어디서든(Home, Projects, 상세페이지) 프로젝트 작성, 수정(연필), 삭제(휴지통) 버튼이 나타납니다.
             </p>
           </div>
-
-          {/* Create Modal inside Admin Dashboard */}
-          {isCreateOpen && (
-            <ProjectFormModal
-              isOpen={isCreateOpen}
-              onClose={() => setIsCreateOpen(false)}
-              onSuccess={() => {
-                router.push("/posts");
-                router.refresh();
-              }}
-            />
-          )}
         </div>
       )}
     </Container>
   );
 }
+
