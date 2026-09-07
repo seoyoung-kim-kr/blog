@@ -2,7 +2,14 @@
 
 import React from "react";
 import { FaRegCalendarAlt } from "react-icons/fa";
-import { FiGithub, FiExternalLink, FiLayers, FiEdit2, FiTrash2, FiUserCheck } from "react-icons/fi";
+import {
+  FiGithub,
+  FiExternalLink,
+  FiLayers,
+  FiEdit2,
+  FiTrash2,
+  FiUserCheck,
+} from "react-icons/fi";
 import { PostData } from "../service/posts";
 import MarkdownViewer from "./MarkdownViewer";
 import { useAdmin } from "../context/AdminContext";
@@ -10,7 +17,18 @@ import { useDeleteProject } from "../hooks/useDeleteProject";
 import { useRouter } from "next/navigation";
 
 function PostContent({ post }: { post: PostData }) {
-  const { path, title, date, description, content, category, skills, githubUrl, demoUrl, role } = post;
+  const {
+    path,
+    title,
+    date,
+    description,
+    content,
+    category,
+    skills,
+    githubUrl,
+    demoUrl,
+    role,
+  } = post;
   const { isAdmin } = useAdmin();
   const { deleteProject, deleting } = useDeleteProject();
   const router = useRouter();
@@ -39,58 +57,57 @@ function PostContent({ post }: { post: PostData }) {
       )}
 
       {/* Project Specs Header */}
-      <header className="space-y-6 text-center max-w-3xl mx-auto pb-8 border-b border-[#ADC2A9]/30 dark:border-[#ADC2A9]/20">
-        <div className="flex items-center justify-center gap-2 flex-wrap">
-          {category && (
-            <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-[#FFC7C7]/40 text-[#2D3A2C] dark:text-[#FEF5ED] border border-[#FFC7C7]/60 shadow-sm">
-              {category}
-            </span>
-          )}
-          <span className="flex items-center gap-1.5 text-xs text-[#2D3A2C]/60 dark:text-[#FEF5ED]/60 font-medium px-3 py-1 rounded-full bg-[#ADC2A9]/20">
-            <FaRegCalendarAlt aria-hidden="true" className="w-3 h-3 text-[#4B6346] dark:text-[#ADC2A9]" />
-            <time dateTime={date}>{date}</time>
-          </span>
-        </div>
-
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#2D3A2C] dark:text-[#FEF5ED] leading-tight">
+      <header
+        className={`max-w-3xl mx-auto flex flex-col items-start ${
+          content
+            ? "pb-10 border-b border-slate-200/60 dark:border-slate-800/60 mb-10"
+            : ""
+        }`}
+      >
+        {/* Title */}
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.3] break-keep mb-6">
           {title}
         </h1>
 
-        {/* Role & Contribution Highlight Badge */}
-        {role && (
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-[#FFC7C7]/30 text-[#2D3A2C] dark:text-[#FEF5ED] border border-[#FFC7C7]/60 shadow-sm mx-auto">
-            <FiUserCheck className="w-4 h-4 text-[#E57A7A]" />
-            <span>Role & Contribution: {role}</span>
-          </div>
-        )}
-
-        {/* Tech Stack Badges */}
-        {skills && skills.length > 0 && (
-          <div className="flex items-center justify-center gap-2 flex-wrap pt-1">
-            <span className="text-xs font-bold text-[#4B6346] dark:text-[#ADC2A9] flex items-center gap-1 mr-1">
-              <FiLayers className="w-3.5 h-3.5" />
-              Stack:
+        {/* Tags / Categories / Skills */}
+        <div className="flex flex-wrap items-center gap-2 mb-8">
+          {category && (
+            <span className="px-3 py-1.5 rounded-full text-[13px] font-semibold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+              #{category}
             </span>
-            {skills.map((skill) => (
+          )}
+          {skills &&
+            skills.map((skill) => (
               <span
                 key={skill}
-                className="px-3 py-1 rounded-full text-xs font-bold bg-[#ADC2A9]/25 dark:bg-[#ADC2A9]/20 text-[#2D3A2C] dark:text-[#FEF5ED] border border-[#ADC2A9]/40"
+                className="px-3 py-1.5 rounded-full text-[13px] font-semibold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
               >
-                {skill}
+                #{skill}
               </span>
             ))}
+        </div>
+
+        {/* Author / Date Info */}
+        <div className="flex flex-col gap-1.5 text-[15px] text-gray-500 dark:text-gray-400">
+          <div className="font-semibold text-gray-700 dark:text-gray-300">
+            Seoyoung Kim
+            {role ? ` · ${role}` : ""}
+            {post.company ? ` @ ${post.company}` : ""}
           </div>
-        )}
+          <time dateTime={date} className="text-[14px]">
+            {date}
+          </time>
+        </div>
 
         {/* Quick Project Action Buttons */}
         {(githubUrl || demoUrl) && (
-          <div className="flex items-center justify-center gap-3 pt-2">
+          <div className="flex items-center gap-3 pt-8 mt-2">
             {demoUrl && (
               <a
                 href={demoUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#ADC2A9] hover:bg-[#9BB397] text-[#2D3A2C] text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95 border border-[#ADC2A9]/60"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#ADC2A9] hover:bg-[#9BB397] text-[#2D3A2C] text-xs sm:text-sm font-bold shadow-sm transition-all active:scale-95"
               >
                 <FiExternalLink className="w-4 h-4" />
                 <span>Live Demo</span>
@@ -101,7 +118,7 @@ function PostContent({ post }: { post: PostData }) {
                 href={githubUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/80 dark:bg-[#1E271D]/80 hover:bg-[#ADC2A9]/20 text-[#2D3A2C] dark:text-[#FEF5ED] text-xs sm:text-sm font-bold border border-[#ADC2A9]/40 shadow-sm transition-all active:scale-95"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white dark:bg-[#1E271D] hover:bg-gray-50 dark:hover:bg-[#121712] text-slate-700 dark:text-slate-300 text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 shadow-sm transition-all active:scale-95"
               >
                 <FiGithub className="w-4 h-4" />
                 <span>GitHub Repository</span>
@@ -112,12 +129,15 @@ function PostContent({ post }: { post: PostData }) {
       </header>
 
       {/* Main Documentation / Case Study Content */}
-      <div className="max-w-3xl mx-auto">
-        <MarkdownViewer content={content} />
-      </div>
+      {content && (
+        <div className="max-w-3xl mx-auto space-y-10">
+          <div className="prose-container">
+            <MarkdownViewer content={content} />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
 
 export default PostContent;
-

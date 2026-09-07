@@ -19,6 +19,7 @@ export type Post = {
   githubUrl?: string;
   role?: string;
   image?: string;
+  content?: string;
 };
 
 export type PostData = Post & {
