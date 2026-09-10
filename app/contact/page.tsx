@@ -1,6 +1,5 @@
 import type { IconType } from "react-icons";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
-import { PiNotionLogo } from "react-icons/pi";
+import { FaGithub } from "react-icons/fa";
 import { FiMail } from "react-icons/fi";
 import Link from "next/link";
 import ContactForm from "@/src/components/ContactForm";
@@ -17,16 +16,6 @@ const socialLinks: { href: string; label: string; Icon: IconType }[] = [
     href: "https://github.com/seoyoung-kim-kr",
     label: "GitHub",
     Icon: FaGithub,
-  },
-  {
-    href: "https://www.notion.so/2c7ae54c5b7880869b47cefaaab99c06?source=copy_link",
-    label: "Notion",
-    Icon: PiNotionLogo,
-  },
-  {
-    href: "https://www.linkedin.com/in/seoyoung-kim-6a4058394/",
-    label: "LinkedIn",
-    Icon: FaLinkedin,
   },
 ];
 

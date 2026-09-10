@@ -9,10 +9,9 @@ export default function Hero() {
       <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-[#FFC7C7]/20 dark:bg-[#FFC7C7]/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
       <div className="max-w-3xl mx-auto flex flex-col items-center text-center">
-
         {/* Headline & Bio */}
         <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-[#FFC7C7]/40 text-[#2D3A2C] dark:text-[#FEF5ED] border border-[#FFC7C7]/60 mb-4 shadow-sm">
-          💻 Frontend Engineer & Portfolio
+          Frontend Developer
         </span>
 
         <h2 className="text-2xl xs:text-3xl sm:text-5xl font-extrabold tracking-tight text-[#2D3A2C] dark:text-[#FEF5ED] mb-4 break-keep">
@@ -25,8 +24,8 @@ export default function Hero() {
         </h2>
 
         <p className="text-sm sm:text-lg text-[#2D3A2C]/80 dark:text-[#FEF5ED]/80 max-w-xl mb-8 leading-relaxed font-normal break-keep">
-          사용자 경험과 코드의 가치를 고민하며, 직관적인 UI와 안정적인 웹 경험을
-          만들어가는 프론트엔드 개발자입니다.
+          레거시 환경의 제약을 넘어, 흔들림 없는 컴포넌트 아키텍처와 최적화된
+          성능을 구축합니다.
         </p>
 
         {/* Action Buttons */}

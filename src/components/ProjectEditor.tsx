@@ -14,6 +14,7 @@ import {
   FiImage,
   FiEye,
   FiEdit3,
+  FiCopy,
 } from "react-icons/fi";
 
 type Props = {
@@ -85,7 +86,10 @@ function MarkdownEditor({
               {value.trim() ? (
                 <MarkdownViewer content={value} />
               ) : (
-                <p className="text-sm text-gray-400 italic">미리보기할 내용이 없습니다. Write 탭에서 마크다운을 작성해주세요.</p>
+                <p className="text-sm text-gray-400 italic">
+                  미리보기할 내용이 없습니다. Write 탭에서 마크다운을
+                  작성해주세요.
+                </p>
               )}
             </div>
           )}
@@ -102,10 +106,14 @@ export default function ProjectEditor({ initialPost }: Props) {
 
   // Form State
   const [title, setTitle] = useState(initialPost?.title || "");
-  const [description, setDescription] = useState(initialPost?.description || "");
+  const [description, setDescription] = useState(
+    initialPost?.description || "",
+  );
   const [category, setCategory] = useState(initialPost?.category || "frontend");
   const [featured, setFeatured] = useState(initialPost?.featured || false);
-  const [skills, setSkills] = useState(initialPost?.skills ? initialPost.skills.join(", ") : "");
+  const [skills, setSkills] = useState(
+    initialPost?.skills ? initialPost.skills.join(", ") : "",
+  );
   const [demoUrl, setDemoUrl] = useState(initialPost?.demoUrl || "");
   const [githubUrl, setGithubUrl] = useState(initialPost?.githubUrl || "");
   const [company, setCompany] = useState(initialPost?.company || "");
@@ -114,10 +122,27 @@ export default function ProjectEditor({ initialPost }: Props) {
 
   // Thumbnail State
   const [thumbnailPreview, setThumbnailPreview] = useState<string>(
-    initialPost?.image || ""
+    initialPost?.image || "",
   );
   const [assetId, setAssetId] = useState<string>("");
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [contentImages, setContentImages] = useState<
+    { url: string; name: string }[]
+  >(() => {
+    const existing: { url: string; name: string }[] = [];
+    if (initialPost?.content) {
+      const regex = /!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g;
+      let match: RegExpExecArray | null;
+      while ((match = regex.exec(initialPost.content)!) !== null) {
+        // Prevent duplicates
+        if (!existing.some((img) => img.url === match![2])) {
+          existing.push({ name: match![1] || "image", url: match![2] });
+        }
+      }
+    }
+    return existing;
+  });
+  const [uploadingContentImage, setUploadingContentImage] = useState(false);
 
   // UI State
   const [submitting, setSubmitting] = useState(false);
@@ -182,6 +207,45 @@ export default function ProjectEditor({ initialPost }: Props) {
     }
   };
 
+  const handleContentImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingContentImage(true);
+    setErrorMsg("");
+
+    try {
+      const newImages: { url: string; name: string }[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const json = await res.json();
+        if (!res.ok || !json.success) {
+          throw new Error(json.message || "이미지 업로드에 실패했습니다.");
+        }
+
+        newImages.push({ url: json.url, name: file.name });
+      }
+
+      setContentImages((prev) => [...prev, ...newImages]);
+    } catch (err: any) {
+      setErrorMsg(err.message || "본문 이미지 업로드 오류");
+    } finally {
+      setUploadingContentImage(false);
+      // Reset input so the same file can be uploaded again if needed
+      e.target.value = "";
+    }
+  };
+
   const handleSubmit = async () => {
     if (!title.trim() || !description.trim() || !category.trim()) {
       setErrorMsg("제목, 설명, 카테고리는 필수 입력 항목입니다.");
@@ -230,7 +294,9 @@ export default function ProjectEditor({ initialPost }: Props) {
       }
 
       setIsDirty(false);
-      setSuccessMsg(isEdit ? "수정이 완료되었습니다!" : "새 포스트가 발행되었습니다!");
+      setSuccessMsg(
+        isEdit ? "수정이 완료되었습니다!" : "새 포스트가 발행되었습니다!",
+      );
 
       setTimeout(() => {
         router.push("/posts");
@@ -244,7 +310,10 @@ export default function ProjectEditor({ initialPost }: Props) {
   };
 
   const handleBack = () => {
-    if (isDirty && !confirm("저장하지 않은 변경사항이 있습니다. 정말 나가시겠어요?")) {
+    if (
+      isDirty &&
+      !confirm("저장하지 않은 변경사항이 있습니다. 정말 나가시겠어요?")
+    ) {
       return;
     }
     router.back();
@@ -253,7 +322,9 @@ export default function ProjectEditor({ initialPost }: Props) {
   if (!isAdmin) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-sm text-gray-400">관리자 권한을 확인하고 있습니다...</p>
+        <p className="text-sm text-gray-400">
+          관리자 권한을 확인하고 있습니다...
+        </p>
       </div>
     );
   }
@@ -261,7 +332,8 @@ export default function ProjectEditor({ initialPost }: Props) {
   // Input field base style
   const inputCls =
     "w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#1E271D] text-sm focus:outline-none focus:border-[#ADC2A9] transition-colors";
-  const labelCls = "block text-xs font-bold mb-1.5 text-[#2D3A2C] dark:text-[#FEF5ED]";
+  const labelCls =
+    "block text-xs font-bold mb-1.5 text-[#2D3A2C] dark:text-[#FEF5ED]";
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#121712]">
@@ -322,7 +394,9 @@ export default function ProjectEditor({ initialPost }: Props) {
         {/* ─── 1. Title ─── */}
         <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#1E271D]/60 border border-[#ADC2A9]/30 space-y-4">
           <div>
-            <label className="block text-[10px] font-bold text-[#4B6346] dark:text-[#ADC2A9] uppercase tracking-wider mb-2">제목</label>
+            <label className="block text-[10px] font-bold text-[#4B6346] dark:text-[#ADC2A9] uppercase tracking-wider mb-2">
+              제목
+            </label>
             <input
               type="text"
               required
@@ -345,7 +419,10 @@ export default function ProjectEditor({ initialPost }: Props) {
               <label className={labelCls}>카테고리 *</label>
               <select
                 value={category}
-                onChange={(e) => { setCategory(e.target.value); markDirty(); }}
+                onChange={(e) => {
+                  setCategory(e.target.value);
+                  markDirty();
+                }}
                 className={inputCls}
               >
                 <option value="frontend">frontend</option>
@@ -359,10 +436,15 @@ export default function ProjectEditor({ initialPost }: Props) {
               <input
                 type="checkbox"
                 checked={featured}
-                onChange={(e) => { setFeatured(e.target.checked); markDirty(); }}
+                onChange={(e) => {
+                  setFeatured(e.target.checked);
+                  markDirty();
+                }}
                 className="w-4 h-4 accent-[#ADC2A9]"
               />
-              <span className="text-xs font-bold text-[#2D3A2C] dark:text-[#FEF5ED]">⭐ 대표 프로젝트 (홈 화면 노출)</span>
+              <span className="text-xs font-bold text-[#2D3A2C] dark:text-[#FEF5ED]">
+                ⭐ 대표 프로젝트 (홈 화면 노출)
+              </span>
             </label>
           </div>
 
@@ -373,7 +455,10 @@ export default function ProjectEditor({ initialPost }: Props) {
               <input
                 type="text"
                 value={company}
-                onChange={(e) => { setCompany(e.target.value); markDirty(); }}
+                onChange={(e) => {
+                  setCompany(e.target.value);
+                  markDirty();
+                }}
                 placeholder="예: 개인 프로젝트"
                 className={inputCls}
               />
@@ -383,7 +468,10 @@ export default function ProjectEditor({ initialPost }: Props) {
               <input
                 type="text"
                 value={skills}
-                onChange={(e) => { setSkills(e.target.value); markDirty(); }}
+                onChange={(e) => {
+                  setSkills(e.target.value);
+                  markDirty();
+                }}
                 placeholder="React, TypeScript, Next.js"
                 className={inputCls}
               />
@@ -393,7 +481,10 @@ export default function ProjectEditor({ initialPost }: Props) {
               <input
                 type="text"
                 value={role}
-                onChange={(e) => { setRole(e.target.value); markDirty(); }}
+                onChange={(e) => {
+                  setRole(e.target.value);
+                  markDirty();
+                }}
                 placeholder="Frontend Lead (80%)"
                 className={inputCls}
               />
@@ -407,7 +498,10 @@ export default function ProjectEditor({ initialPost }: Props) {
               <input
                 type="url"
                 value={githubUrl}
-                onChange={(e) => { setGithubUrl(e.target.value); markDirty(); }}
+                onChange={(e) => {
+                  setGithubUrl(e.target.value);
+                  markDirty();
+                }}
                 placeholder="https://github.com/..."
                 className={inputCls}
               />
@@ -417,7 +511,10 @@ export default function ProjectEditor({ initialPost }: Props) {
               <input
                 type="url"
                 value={demoUrl}
-                onChange={(e) => { setDemoUrl(e.target.value); markDirty(); }}
+                onChange={(e) => {
+                  setDemoUrl(e.target.value);
+                  markDirty();
+                }}
                 placeholder="https://..."
                 className={inputCls}
               />
@@ -427,7 +524,9 @@ export default function ProjectEditor({ initialPost }: Props) {
 
         {/* ─── 3. Thumbnail Upload ─── */}
         <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#1E271D]/60 border border-[#ADC2A9]/30">
-          <label className="block text-[10px] font-bold text-[#4B6346] dark:text-[#ADC2A9] uppercase tracking-wider mb-3">썸네일 이미지</label>
+          <label className="block text-[10px] font-bold text-[#4B6346] dark:text-[#ADC2A9] uppercase tracking-wider mb-3">
+            썸네일 이미지
+          </label>
           <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-[#121712] border border-dashed border-[#ADC2A9]/30">
             {thumbnailPreview ? (
               <div className="relative w-36 aspect-[16/10] rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shrink-0 bg-gray-50">
@@ -464,7 +563,76 @@ export default function ProjectEditor({ initialPost }: Props) {
           </div>
         </div>
 
-        {/* ─── 4. Description (요약 설명) ─── */}
+        {/* ─── 4. Content Images (본문 이미지) ─── */}
+        <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#1E271D]/60 border border-[#ADC2A9]/30">
+          <div className="flex flex-wrap items-center justify-between mb-4 gap-2">
+            <div>
+              <label className="block text-[10px] font-bold text-[#4B6346] dark:text-[#ADC2A9] uppercase tracking-wider">
+                본문 삽입용 이미지
+              </label>
+              <p className="text-xs text-gray-500 mt-1">
+                이미지를 업로드하고 마크다운 코드를 복사해서 본문에
+                붙여넣으세요.
+              </p>
+            </div>
+            <label className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-[#ADC2A9]/20 text-[#2D3A2C] dark:text-[#FEF5ED] hover:bg-[#ADC2A9]/40 cursor-pointer transition-colors">
+              <FiUploadCloud className="w-4 h-4" />
+              <span>
+                {uploadingContentImage ? "업로드 중..." : "이미지 추가"}
+              </span>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleContentImageUpload}
+                disabled={uploadingContentImage}
+                className="hidden"
+              />
+            </label>
+          </div>
+
+          {contentImages.length === 0 ? (
+            <div className="text-center p-6 border border-dashed border-[#ADC2A9]/30 rounded-xl text-xs text-gray-400 bg-gray-50 dark:bg-[#121712]">
+              등록된 이미지가 없습니다.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {contentImages.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 p-3 border border-[#ADC2A9]/20 rounded-xl bg-gray-50 dark:bg-[#121712] shadow-sm"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={img.url}
+                    alt={img.name}
+                    className="w-14 h-14 object-cover rounded-lg border border-gray-200 dark:border-gray-700 bg-white"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs truncate font-medium text-gray-600 dark:text-gray-300 mb-1.5">
+                      {img.name}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          `![${img.name}](${img.url})`,
+                        );
+                        alert("마크다운이 클립보드에 복사되었습니다!");
+                      }}
+                      className="text-[10px] font-bold px-2.5 py-1.5 bg-white dark:bg-[#1E271D] border border-[#ADC2A9]/40 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-1 text-[#2D3A2C] dark:text-[#FEF5ED]"
+                    >
+                      <FiCopy className="w-3.5 h-3.5" />
+                      마크다운 복사
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ─── 5. Description (요약 설명) ─── */}
         <MarkdownEditor
           label="개요 (요약 설명)"
           value={description}
@@ -476,7 +644,7 @@ export default function ProjectEditor({ initialPost }: Props) {
           minRows={5}
         />
 
-        {/* ─── 5. Content (본문 Detail) ─── */}
+        {/* ─── 6. Content (본문 Detail) ─── */}
         <MarkdownEditor
           label="Detail (상세 본문)"
           value={content}
@@ -487,7 +655,6 @@ export default function ProjectEditor({ initialPost }: Props) {
           placeholder="기술 블로그처럼 상세한 문제 해결 과정이나 회고를 작성하세요...&#10;&#10;# 제목&#10;## 소제목&#10;- 리스트&#10;> 인용구&#10;```javascript&#10;// 코드 블록&#10;```"
           minRows={15}
         />
-
       </div>
     </div>
   );
